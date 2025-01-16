@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <script src="./plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="./plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="./plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <title>路由</title>
+</head>
+<body>
+    <div id="index" class="container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>分类</th>
+                    <th>科目</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="1">文档</td>
+                    <td>doc</td>
+                    <td><a class="btn btn-success btn-xs" href="doc/index.html">查看</a></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">工具</td>
+                    <td>TTS</td>
+                    <td><a class="btn btn-success btn-xs" href="tts/">查看</a></td>
+                </tr>
+                <tr>
+                    <td>MP3</td>
+                    <td><a class="btn btn-success btn-xs" href="mp3/">查看</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<script>
+
+</script>
+<style>
+    #index .table th, #index .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+</body>
+</html>
