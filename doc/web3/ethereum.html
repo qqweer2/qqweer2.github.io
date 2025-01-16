@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ch-ZH" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight-solidity.js"></script>
+    <title>Ethereum</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#currency">货币</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Solidity<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#solidity">基础语法</a></li>
+                <li><a href="#solidityERC20">ERC20</a></li>
+                <li><a href="#solidityERC721">ERC710</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hardhat<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#hardhat">项目构建</a></li>
+                <li><a href="#hardhatStructure">项目结构</a></li>
+                <li><a href="#solidityERC721">ERC710</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">合约例子<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="./demo/storage.html">Storage</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">概念</h3>
+        <h4>Ethereum 以太坊</h4>
+        <p>A next-Generation Smart Contract and Decentralized Application Platform</p>
+        <p>一个下一代智能合约和去中心化的应用平台</p>
+        <h5>初创</h5>
+        <p>2014年迈阿密比特币会议，本特林宣布了以太坊项目，并且提出了多项创新性区块链技术，7月，启动以太坊众筹募资，募得3.1万比特币（当时约合1830万美元）</p>
+        <p>2015年7月30日，当时作为以太坊项目CCO成员Stephen Tual在官方博客正式宣布了以太坊系统诞生，以太坊主网上线。</p>
+
+        <h4>账户 Account</h4>
+        <p>包含地址，余额和随机数，以及可选的存储和代码的对象</p>
+        <h5>普通账户 EOA</h5>
+        <p>External Owned Account ，以太坊网络的人类用户创建的账户，存储和代码为空</p>
+        <h5>合约账户 Contact</h5>
+        <p>包含存储和代码</p>
+
+        <h4>地址 Address</h4>
+        <p>代表一个EOA或Contract，它可以在区块链上接收或发送交易。更具体来说，它是ECDSA公钥的keccak散列的最右边的160位</p>
+
+        <h4>交易 Transaction</h4>
+        <p>可以发送以太币和信息</p>
+        <p>向合约发送的交易可以调用合约代码。并以信息数据作为函数参数</p>
+        <p>向空用户发送信息，可以自动生成以信息为代码块的合约账户</p>
+
+        <h4>gss</h4>
+        <p>以太坊用于执行合约的虚拟燃料。以太坊虚拟机使用核算机制来衡量gas的消耗量并限制计算资料的消耗</p>
+
+        <h4>Dapp</h4>
+        <p>Decentralized Application 去中心化应用</p>
+        <p>基于以太坊可以创建智能合约（Smart Contract）来构建去中心化应用，由以下组成：</p>
+        <p> -- 区块链上的智能合约</p>
+        <p> -- Web前端用户界面</p>
+
+        <h4>Crypto Currency</h4>
+        <p>加密货币</p>
+
+        <h4>Token</h4>
+        <p>代币，也称作通证，代表所有权的资产、货币、权限等在区块链上的抽象</p>
+        <h5>FT</h5>
+        <p>同质化通证（fungible token） 基于区块链发行的，和相互替代，可接近无限拆分的</p>
+        <h5>NFT</h5>
+        <p>非同质化通证（non-fungible token） 基于区块链发行的，唯一的，不可替代，（大多数情况下）不可拆分的</p>
+
+        <h4>EIP</h4>
+        <p>Ethereum Improvement Proposals, 以太坊改进意见</p>
+        <h4>ERC</h4>
+        <p>Ethereum Request of Comments, 以太坊征求意见。一旦被EIP标记，表示试图定义以太坊使用的特定标准的提议</p>
+        <h4>Ethash</h4>
+        <p>Ethereum Hash, 以太坊1.0的工作量证明算法</p>
+        <h4>HD钱包</h4>
+        <p>使用分层确定（HD protocol）密钥创建和转账协议（BIP32）的钱包</p>
+        <h4>Keccak256</h4>
+        <p>以太坊中使用的密码哈希函数，它被标准化为SHA-3</p>
+        <h4>Nonce</h4>
+        <p>在密码学中，nonce用于指代只能使用一次的值。以太坊使用两种随机数，账户随机数和POW随机数</p>
+
+        <h4>Pow Shell</h4>
+        <p>Set-ExecutionPolicy RemoteSigned</p>
+    </div>
+
+    <div id="currency" class="row">
+        <h3 class="text-primary">货币</h3>
+        <h4>ether</h4>
+        <p>以太坊的货币单位成为以太，也称ETH，基本单位为 <span class="text-danger">1 ether</span></p>
+        <p>最小单位为 <span class="text-danger">1 wei</span>， 1 ether = 10^18 wei, 1 ether = 10^9 gwei, 1 gwei = 10^9 wei</p>
+    </div>
+
+
+    <div id="solidity" class="row">
+        <h3 class="text-primary">Solidity</h3>
+        <p><span class="text-danger">Solidity</span>‌是一门专门用于开发智能合约的高级编程语言，设计用于在‌以太坊虚拟机‌（EVM）上运行。它受到C++, Python和Javascript语言的影响，具有静态类型、支持继承、库和复杂用户定义类型等特性‌。语法和代码编写规则可查阅<a href="https://docs.soliditylang.org/" target="_blank">官方文档</a></p>
+        <h4 id="solidityPragma">基础语法</h4>
+        <h5>数据类型</h5>
+        <p><span class="text-primary">bool</span> true false</p>
+        <p><span class="text-primary">整型</span> int8 int16...</p>
+        <p><span class="text-primary">无符号整型</span> uint8 uint16...</p>
+        <p><span class="text-primary">address</span> 地址，可表示外部账户地址、合约地址</p>
+        <p><span class="text-primary">string</span> 字符串</p>
+        <p><span class="text-primary">mapping(key -> val)</span> 映射，不可遍历</p>
+        <p><span class="text-primary">array[]</span> 数组，定长数组uint[] array = uint[8], 变成数组uint[] array</p>
+        <p>memory 数组必须为定长数组，不可使用push()函数</p>
+        <p><span class="text-primary">struct</span> 结构体，结构体<span class="text-danger">不可以嵌套</span>定义，但可以定义本身的数组</p>
+        <pre><code>
+        // SPDX-License-Identifier: MIT
+        pragma solidity ^0.8.7;
+
+        contract ArrayDemo {
+
+            uint[] x;
+            function dynamic() public returns (uint[] memory a) {
+                x.push(1);
+                x.push(2);
+                x.push(3);
+                x.pop();
+                a = x;  // 1 2
+                // a.push(4); 编译报错
+            }
+
+            // delete 数组 完全初始化
+            uint[] x;
+            function dynamic() public returns (uint[] memory a) {
+                x.push(1);
+                x.push(2);
+                x.push(3);
+                delete x[1];
+                x.push(4);
+                a = x; // 4
+            }
+            // delete 指定下标 对应下标赋值为0
+            uint[] x;
+            function dynamic() public returns (uint[] memory a) {
+                x.push(1);
+                x.push(2);
+                x.push(3);
+                delete x[1];
+                x.push(4);
+                a = x; // 1 0 3 4
+            }
+        }
+
+        </code></pre>
+
+        <h5>引用类型</h5>
+        <p>引用类型是创建指针指向源数据，并不会创建数据副本，必须明确指定数据的存储模式，包括：<span class="text-primary">mapping</span>、<span class="text-primary">array</span>、<span class="text-primary">struct</span>。</p>
+        <pre><code>
+            // SPDX-License-Identifier: MIT
+            pragma solidity ^0.8.7;
+
+            contract Reference {
+                // memory -> storage
+                uint[] x;
+                function refer() public returns (uint, uint, uint) {
+                    uint[] memory a = new uint[](2);
+                    a[0] = 1;
+                    a[1] = 2;
+                    x = a; // 将整个数组拷贝一份到storage中
+
+                    a[0] = 3;
+                    x.push(4); // x依然是变长数组
+                    return (a[0], x[0], x[1]); // 3 1 2 4
+                }
+                // storage -> memory
+                uint[] x;
+                function refer() public returns (uint, uint, uint) {
+                    x.push(1);
+                    uint[] memory a = x;// 将整个数组拷贝一份到memory中, 并且定长为1
+                    a[0] = 3;
+                    x.push(2);
+                    return (a[0], x[0], x[1]); // 3 1 2
+                }
+                // storage -> storage
+                uint[] x;
+                function refer() public returns (uint, uint, uint) {
+                    x.push(1);
+                    uint[] storage a = x;// 创建指针a引用x
+                    a[0] = 3;
+                    a.push(2);
+                    return (a[0], x[0], a[1]); // 3 3 2
+                }
+
+                // memory -> memory
+                function refer() public pure returns (uint, uint, uint, uint) {
+                    uint[] memory a = new uint[](2);
+                    a[0] = 1;
+                    a[1] = 2;
+                    uint[] memory x = a; // 创建指针x引用a
+
+                    a[0] = 3;
+                    a[1] = 4;
+                    return (a[0], a[1], x[0], x[1]); // 3 4 3 4
+                }
+            }
+
+        </code></pre>
+        <h5>可见度修饰符</h5>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th style="width: 20%">可见度</th>
+                <th style="width: 20%">within contract</th>
+                <th style="width: 20%">outside contract</th>
+                <th style="width: 20%">child contract</th>
+                <th style="width: 20%">External Account</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>public</td><td>OK</td><td>OK</td><td>OK</td><td>OK</td></tr>
+            <tr><td>private</td><td>OK</td><td><span class="glyphicon glyphicon-remove"></span></td><td><span class="glyphicon glyphicon-remove"></span></td><td><span class="glyphicon glyphicon-remove"></span></td></tr>
+            <tr><td>internal</td><td>OK</td><td><span class="glyphicon glyphicon-remove"></span></td><td>OK</td><td><span class="glyphicon glyphicon-remove"></span></td></tr>
+            <tr><td>external</td><td><span class="glyphicon glyphicon-remove"></span></td><td>OK</td><td><span class="glyphicon glyphicon-remove"></span></td><td>OK</td></tr>
+            </tbody>
+        </table>
+
+        <h5>函数状态修饰符</h5>
+        <p><span class="text-warning">无修饰</span> 改变状态变量</p>
+        <p><span class="text-primary">view</span> 读取状态变量，但是不改变</p>
+        <p><span class="text-success">pure</span> 完全不使用状态变量，纯运算逻辑</p>
+
+        <h5>函数变量、参数、返回值的存储模式</h5>
+        <p><span class="text-primary">storage</span> 永久性存储(存储在区块链)，合约里声明的默认为永久性存储，无需标记</p>
+        <p><span class="text-primary">memory</span> 暂时性存储(存储在内存)，函数参数，可修改</p>
+        <p><span class="text-primary">calldata</span> 暂时性存储(存储在内存)，函数参数，不可修改</p>
+        <p><span class="text-success">stack</span> </p>
+        <p><span class="text-success">codes</span> </p>
+        <p><span class="text-success">logs</span> </p>
+        <pre><code class="solidity">
+        // SPDX-License-Identifier: MIT
+        pragma solidity 0.8.24;
+
+    // 定义合约
+    contract HelloWorld {
+        bool sex;
+        uint256 age;
+        string name = "Hello Wrold";
+
+        /*
+        定义函数
+        */
+        function sayHello() public view returns (string memory) {
+            return say(name);
+        }
+
+        function setHellp(string memory params) public {
+            name = params;
+        }
+
+        // pure 纯计算函数
+        function say(string memory params) internal pure returns (string memory) {
+            return string.concat(params, " from HelloWrold");
+        }
+    }
+            </code></pre>
+        <h5>函数指针</h5>
+        <p><span class="text-primary">函数</span> 可作为函数的参数，也可作为返回值，其为指针类型。以下例子展示如何使用内部函数类型</p>
+        <p>以下例子展示如何使用内部函数类型</p>
+        <pre><code class="solidity">
+            // SPDX-License-Identifier: GPL-3.0
+            pragma solidity >=0.4.16 <0.9.0;
+
+            library ArrayUtils {
+                // 内部函数可以在内部库函数中使用，因为它们将是同一代码上下文的一部分
+                function map(uint[] memory self, function (uint) pure returns (uint) f)
+                    internal
+                    pure
+                    returns (uint[] memory r)
+                {
+                    r = new uint[](self.length);
+                    for (uint i = 0; i < self.length; i++) {
+                        r[i] = f(self[i]);
+                    }
+                }
+
+                function reduce(
+                    uint[] memory self,
+                    function (uint, uint) pure returns (uint) f
+                )
+                    internal
+                    pure
+                    returns (uint r)
+                {
+                    r = self[0];
+                    for (uint i = 1; i < self.length; i++) {
+                        r = f(r, self[i]);
+                    }
+                }
+
+                function range(uint length) internal pure returns (uint[] memory r) {
+                    r = new uint[](length);
+                    for (uint i = 0; i < r.length; i++) {
+                        r[i] = i;
+                    }
+                }
+            }
+
+            contract Pyramid {
+                using ArrayUtils for *;
+
+                function pyramid(uint l) public pure returns (uint) {
+                    return ArrayUtils.range(l).map(square).reduce(sum);
+                }
+
+                function square(uint x) internal pure returns (uint) {
+                    return x * x;
+                }
+
+                function sum(uint x, uint y) internal pure returns (uint) {
+                    return x + y;
+                }
+            }
+        </code></pre>
+
+        <p>以下例子展示如何使用内部函数类型</p>
+        <pre><code class="solidity">
+            // SPDX-License-Identifier: GPL-3.0
+            pragma solidity >=0.4.22 <0.9.0;
+
+            contract Oracle {
+                struct Request {
+                    bytes data;
+                    function(uint) external callback;
+                }
+
+                Request[] private requests;
+                event NewRequest(uint);
+
+                function query(bytes memory data, function(uint) external callback) public {
+                    requests.push(Request(data, callback));
+                    emit NewRequest(requests.length - 1);
+                }
+
+                function reply(uint requestID, uint response) public {
+                    // 这里要检查的是调用返回是否来自可信的来源
+                    requests[requestID].callback(response);
+                }
+            }
+
+
+            contract OracleUser {
+                Oracle constant private ORACLE_CONST = Oracle(address(0x00000000219ab540356cBB839Cbe05303d7705Fa)); // 已知的合约
+                uint private exchangeRate;
+
+                function buySomething() public {
+                    ORACLE_CONST.query("USD", this.oracleResponse);
+                }
+
+                function oracleResponse(uint response) public {
+                    require(
+                        msg.sender == address(ORACLE_CONST),
+                        "Only oracle can call this."
+                    );
+                    exchangeRate = response;
+                }
+            }
+        </code></pre>
+
+        <h4 id="solidityERC20">ERC20</h4>
+        <h4 id="solidityERC721">ERC721</h4>
+    </div>
+
+    <div id="hardhat" class="row">
+        <h3 class="text-primary">hardhat</h3>
+        <h4 id="hardhatBuild">项目构建</h4>
+        <p>安装nodejs运行环境，版本20.0.0</p>
+        <p><span class="text-warning">npm init</span> 初始化npm项目</p>
+        <p><span class="text-warning">npm install hardhat --save-dev</span> 安装hardhat依赖</p>
+        <p><span class="text-warning">npx hardhat</span> 初始化hardhat项目</p>
+        <h4 id="hardhatStructure">项目结构</h4>
+        <p><span class="text-success">artifacts</span> 合约编译成果目录，由编译命令生产</p>
+        <p><span class="text-warning">contracts</span> 合约源文件目录</p>
+        <p><span class="text-warning">deploy</span> 合约部署脚本目录</p>
+        <p><span class="text-warning">scripts</span> 运行脚本目录</p>
+        <p><span class="text-warning">test</span> 测试脚本目录</p>
+        <p><span class="text-danger">hardhat.config.js</span> Hardhat配置文件</p>
+        <p><span class="text-danger">package.json</span> npm配置文件</p>
+
+    </div>
+
+</div>
+<script>
+    hljs.highlightAll();
+</script>
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+</body>
+</html>

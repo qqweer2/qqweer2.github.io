@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>has 伪类</title>
+</head>
+<body>
+    <h1>has 用法</h1>
+    <div id="frame">
+        <div id="a1"></div>
+        <div id="a2"></div>
+        <div class="c3"></div>
+        <div class="c4"></div>
+        <div class="c5"></div>
+        <div class="c6"></div>
+    </div>
+
+    <div id="frame2">
+        <div class="c1"></div>
+        <div class="c2"></div>
+    </div>
+    <script src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+<script>
+
+</script>
+<style>
+    h1 {
+        width: 1000px;
+        margin: 0 auto;
+    }
+    #frame, #frame2 {
+        width: 1000px;
+        margin: 10px auto;
+        padding: 10px 0;
+        background-color: #e8e8e8;
+    }
+    #frame div, #frame2 div {
+        width: 96%;
+        height: 20px;
+        margin: 10px auto;
+    }
+    #frame div:nth-child(1) {background-color: #0188fb}
+    #frame div:nth-child(2) {background-color: #0000ff}
+    #frame div:nth-child(3) {background-color: #008a00}
+    #frame div:nth-child(4) {background-color: #7ee787}
+    #frame div:nth-child(5) {background-color: #00ffff}
+    #frame div:nth-child(6) {background-color: #ffffff}
+
+    #frame2 div:nth-child(1) {background-color: #0188fb}
+    #frame2 div:nth-child(2) {background-color: #0000ff}
+
+    #frame:has(div:nth-child(1):hover) {
+        background-color: #0188fb;
+    }
+    #frame:has(#a2:hover) {
+        background-color: #0000ff;
+    }
+    #frame:has(.c3:hover) {
+        background-color: #008a00;
+    }
+    #frame .c4:has(+ .c5:hover) {
+        background-color: #00ffff
+    }
+    #frame:has(+ #frame2 .c1:hover) .c6 {background-color: #0188fb}
+    #frame:has(+ #frame2 .c2:hover) div:nth-child(6) {background-color: #0000ff}
+</style>
+</body>
+</html>

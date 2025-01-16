@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Kubernetes</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#install">安装</a></li>
+        <li><a href="#command">命令</a></li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Docker是一个开源的应用容器引擎，他直接安装在操作系统之上。</p>
+        <h4>控制面板(Master)</h4>
+        <h5>api-server</h5>
+        <p>接口服务，基于REST风格开放k8s接口服务</p>
+        <h5>kube-controller-manager</h5>
+        <p>控制器管理器：管理各个类型的控制器，针对k8s中的各种资源进行管理</p>
+        <h5>cloud-controller-manager</h5>
+        <p>云控制器管理器：第三方云平台提供的控制器，针对API对接管理功能</p>
+        <h5>kube-scheduler</h5>
+        <p>调度器：负责将Pod基于一定算法，将其调用到更适合的节点(Node)上</p>
+        <h5>etcd</h5>
+        <p>k8s的数据库，键值型存储的分布式数据库，提供了基于Ralt算法实现自主的集群高可用</p>
+        <p>老版本：基于内存；新版本：持久化存储</p>
+
+        <h4>节点(Node)</h4>
+        <h5>kubelet</h5>
+        <p>负责Pod生命周期、存储、网络等管理</p>
+        <h5>kube-proxy</h5>
+        <p>网络代理：负责service的服务发现、负载均衡（4层）</p>
+        <h5>container-runtime</h5>
+        <p>容器运行时环境：docker、containerd、CRI-O</p>
+        <h5>Pod</h5>
+        <p>运行容器的环境</p>
+
+        <h4>专业术语</h4>
+        <h5>服务分类</h5>
+        <p>无状态：不会在本地存储持久化数据，多个服务实例对于同一个用户请求的响应结果是完全一致的。这种多服务实例之间是没有依赖关系</p>
+        <p>有状态：需要在本地存储持久化数据，典型的是分布式数据库的应用，分布式节点实例之间有依赖的拓扑关系</p>
+        <h5>资源和对象</h5>
+        <p>k8s中所有的内容都被抽象为“资源”，比如Pod、Service、Node等都是资源。“对象”是资源的“实例”，是持久化的实例，k8s使用这些实例去表示整个集群的状态。</p>
+        <h5>资源的分类</h5>
+        <p>元空间：资源元数据的描述</p>
+        <p>集群：</p>
+        <p>命名空间：逻辑集群，通常只能在内部使用</p>
+
+        <h5>对象的规约和状态</h5>
+        <p>归约(Spec)描述了对象的 <span class="text-primary">期望</span> 状态-期望对象所具有的特征，必须配置</p>
+        <p>状态(Status)描述了对象的 <span class="text-danger">实际</span> 状态，由k8s自行维护，会尽量朝向对象的期望状态靠拢</p>
+        <!--https://www.bilibili.com/video/BV1MT411x7GH/?p=14&spm_id_from=pageDriver&vd_source=f96e25de4a738873d8887be1f720e1d6-->
+        <h5>Pod</h5>
+        <p>Pod是k8s中最小可部署单元，一个Pod包含了一个或多个应用程序容器、存储资源、一个唯一的网络IP地址以及一些确定容器该如何运行的选项</p>
+    </div>
+    <div id="install" class="row">
+        <h3 class="text-primary">安装</h3>
+        <h4>准备</h4>
+        <h5>修改hostname</h5>
+        <p>vi /etc/hostname</p>
+        <h5>修改hosts</h5>
+        <p>vi /etc/hosts</p>
+        <h5>关闭swap</h5>
+        <h5>vi /etc/fatal 注释掉swap配置</h5>
+        <h5>流量桥</h5>
+        <pre><code class="bash">
+cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
+        </code></pre>
+        <h5>配置阿里yum源</h5>
+        <p>yum install -y yum-utils</p>
+        <p>yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</p>
+        <h4>安装Docker</h4>
+        <p>yum install -y docker-ce-20.10.7 docker-ce-cli-20.10.7 containerd.io-1.4.6</p>
+        <p>systemctl enable --now docker</p>
+        <h5>安装nfs</h5>
+        <p>yum install -y nfs-utils</p>
+
+        <h4>安装kube</h4>
+        <pre><code class="bash">
+cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+ https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+        </code></pre>
+        <p>yum install -y kubelet-1.20.9 kubeadm-1.20.9 kubectl-1.20.9</p>
+        <p>systemctl enable --now kubelet</p>
+
+        <h4>初始化Master</h4>
+        <pre><code class="bash">
+kubeadm init \
+ --apiserver-advertise-address=192.168.10.210 \
+ --control-plane-endpoint=k8s-master \
+ --image-repository registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images \
+ --kubernetes-version v1.20.9 \
+ --service-cidr=10.96.0.0/16 \
+ --pod-network-cidr=10.168.0.0/16
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        </code></pre>
+        <h5>安装Calico</h5>
+        <p>curl https://docs.projectcalico.org/v3.20/manifests/calico.yaml -O </p>
+        <p>kubectl apply -f calioc.yaml</p>
+        <p>安装完成后执行 <span class="text-primary">kebectl get nodes</span> 可得到主节点为Ready状态</p>
+
+        <h4>加入Node</h4>
+        <h5>获取令牌</h5>
+        <p>kubeadm token create --print-join-command</p>
+        <h5>执行加入</h5>
+        <p>复制命令再node节点执行即可</p>
+        <h5>查看节点</h5>
+        <p>kubectl get nodes 在Master节点执行</p>
+
+        <h4>配置nfs</h4>
+        <h5>配置Master</h5>
+        <p>echo "/nfs/data/ *(insecure,rw,sync,no_root_squash)" > /etc/exports</p>
+        <p>mkdir -p /nfs/data</p>
+        <p>systemctl enable rpcbind</p>
+        <p>systemctl enable nfs-server</p>
+        <p>systemctl start rpcbind</p>
+        <p>systemctl start nfs-server</p>
+        <p>exportfs -r</p>
+        <p>exportfs</p>
+        <h5>配置Client</h5>
+        <p>showmount -e 192.168.10.210 查看Master节点的可绑定路径</p>
+        <p>mkdir -p /nfs/data</p>
+        <p>mount -t nfs 192.168.10.210:/nfs/data /nfs/data</p>
+    </div>
+
+    <div id="command" class="row">
+        <h3 class="text-success">命令</h3>
+
+    </div>
+
+
+</div>
+
+<script>
+    hljs.highlightAll();
+
+</script>
+</body>
+</html>

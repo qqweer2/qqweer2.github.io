@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../../plugin/bootstrap/css/bootstrap.min.css" />
+    <script src="../../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <title>storage</title>
+</head>
+<body>
+    <div id="index" class="container">
+        <div class="jumbotron">
+            <h1>Hello, Smart Contract!</h1>
+            <p class="text-primary">Storage Contract</p>
+            <p><a class="btn btn-primary btn-lg" href="../ethereum.html" role="button">BACK</a></p>
+        </div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="ContractAddress" class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="ContractAddress" placeholder="Contract Address">
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-default" id="btnConnect">Connect</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="storage" class="col-sm-2 control-label">storage</label>
+                <div class="col-sm-8">
+                    <input type="number" min="0" class="form-control" id="storage" placeholder="Contract Address">
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-default" id="btnStorage">Storage</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="retrieve" class="col-sm-2 control-label">retrieve</label>
+                <div class="col-sm-8">
+                    <input type="number" readonly class="form-control" id="retrieve" placeholder="Contract Address">
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-default" id="btnRetrieve">Retrieve</button>
+                </div>
+            </div>
+        </form>
+    </div>
+<script type="module">
+    import {ethers} from "../../../plugin/web3/ethers-6.13.5.min.js";
+    import {ABI_Storage as Contract_ABI} from "./contracts.js";
+    const ContractAddress = "0x5aa03B0DF5659a7110d3A1D7340c8Fa249cE91DE";
+    const ContractName= "Storage";
+
+$(function () {
+    if (!window.ethereum) {
+        function noWallet() {
+            alert("no wallet found, for MateMask...")
+        }
+        $('#btnConnect').on('click', noWallet);
+        $('#btnStorage').on('click', noWallet);
+        $('#btnRetrieve').on('click', noWallet);
+        noWallet()
+        return
+    }
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    // let signer = await provider.getSigner();
+    $('#ContractAddress').val(ContractAddress)
+    $('#btnConnect').on('click', function (){
+        alert($('#ContractAddress').val())
+        window.ethereum.request({method: "eth_requestAccounts"})
+    })
+
+    $('#btnStorage').on('click', async function (){
+        const num = $('#storage').val()
+        let signer = await provider.getSigner();
+        console.log('signer = ', signer)
+        const contract = new ethers.Contract(ContractAddress, Contract_ABI, signer);
+        let receipt = await contract.store(num);
+        console.log('contract.store(num) receipt = ', receipt)
+    })
+
+    $('#btnRetrieve').on('click', async function (){
+        let signer = await provider.getSigner();
+        const contract = new ethers.Contract(ContractAddress, Contract_ABI, signer);
+        let num = await contract.retrieve();
+        console.log('contract.retrieve() retrieve = ', num)
+        $('#retrieve').val(num.toString())
+    })
+})
+</script>
+<style>
+
+</style>
+</body>
+</html>

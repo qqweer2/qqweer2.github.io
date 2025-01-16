@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>跨域测试</title>
+</head>
+<body>
+    <h1>CORS</h1>
+    <div id="frame" style="height: 300px;">
+    </div>
+	<img src="https://ydcp.oss-cn-beijing.aliyuncs.com/frame_aa778259ea9f4bdc9995ad37346f6f22.jpg"/>
+    <script src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+<script>
+    $.ajax({
+        url: 'http://localhost:8070/admin/hi?a=3',
+        method: 'post',
+        success: function (res) {
+            $("#frame").html(res.data)
+        }
+    })
+</script>
+<style>
+</style>
+</body>
+</html>

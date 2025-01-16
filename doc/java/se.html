@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Java SE</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">环境配置 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#env">Windows</a></li>
+                <li><a href="#env-liunx">Liunx</a></li>
+            </ul>
+        </li>
+        <li><a href="#number">数字</a></li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Java SE是由Sun Micro systems公司于1995年5月推出的Java程序设计语言和Java平台的总称。</p>
+    </div>
+    <div id="env" class="row">
+        <h3 class="text-primary">环境配置</h3>
+        <h4 id="env-windows">Windows</h4>
+        <p>解压jdk文件包</p>
+        <p>通过 我的电脑 》 属性 》 高级系统设置 打开环境变量设置界面</p>
+        <p>配置 JAVA_HOME=jdk文件包路径</p>
+        <p>配置 CLASSPATH=.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar</p>
+        <p>window7 添加 PATH %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;</p>
+        <p>window10添加 PATH %JAVA_HOME%\bin 和 %JAVA_HOME%\jre\bin 两条</p>
+
+        <h4 id="env-liunx">Liunx</h4>
+        <p>centOS7 <span class="text-primary">vi /etc/pro.d/jdk.sh</span> 创建文件配置如下</p>
+        <pre><code class="sh">
+export JAVA_HOME=/opt/module/jdk1.8.0_341
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+        </code></pre>
+        <p>执行 <span class="text-primary">source /etc/profile</span> 使环境生效</p>
+    </div>
+    <div id="number" class="row">
+        <h3 class="text-primary">数字</h3>
+        <h4>格式化</h4>
+        <pre><code class="java">
+
+        int number = 5;
+        // 补足5位数字，不足部分前面补0
+        String formatted = String.format("%05d", number);
+        System.out.println(formatted); // 输出：00005
+
+        // 如果数字超过5位，则不会添加前置0
+        number = 123456;
+        formatted = String.format("%05d", number);
+        System.out.println(formatted); // 输出：12345
+
+        // 如果需要左对齐，可以使用-标志
+        formatted = String.format("%05d", number);
+        System.out.println(formatted); // 输出：<12345  后面有空格
+
+        // 如果需要0填充浮点数，可以使用如下方式
+        double decimal = 123.45;
+        formatted = String.format("%.1f", decimal);
+        System.out.println(formatted); // 输出：123.5
+
+        formatted = String.format("%.3f", decimal);
+        System.out.println(formatted); // 输出：123.450
+
+        // 使用0填充小数点后两位，不足位用0填充
+        formatted = String.format("%05.2f", decimal);
+        System.out.println(formatted); // 输出：0123.45
+
+        // BigDecimal也支持，自动四舍五入
+        formatted = String.format("%.1f", new BigDecimal("123.44"));
+        System.out.println(formatted); // 输出：123.4
+        formatted = String.format("%.1f", new BigDecimal("123.45"));
+        System.out.println(formatted); // 输出：123.5
+        // %d 抛出异常
+        formatted = String.format("%.1d", new BigDecimal("123.45"));
+        System.out.println(formatted); // 输出：123.5
+
+        // 固定保留2位小数
+        DecimalFormat format1 = new DecimalFormat("0.00");
+        // 最多保留2位小数
+        DecimalFormat format2 = new DecimalFormat("0.##");
+        // 至少保留2位整数
+        DecimalFormat format3 = new DecimalFormat("00");
+        format1.setRoundingMode(RoundingMode.HALF_UP);
+        format2.setRoundingMode(RoundingMode.HALF_UP);
+        System.out.println(format1.format(new BigDecimal("3.40")));
+        System.out.println(format2.format(new BigDecimal("3.40")));
+        System.out.println(format3.format(120));
+        System.out.println(format3.format(5));
+
+        </code></pre>
+    </div>
+
+</div>
+
+<script>
+    hljs.highlightAll();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Java SE</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#number">数字</a></li>
+        <li><a href="#date">日期</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MVC <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#exportExcel">导出Excel</a></li>
+                <li><a href="#buildSentinel">sentinel</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Java se是由Sun Micro systems公司于1995年5月推出的Java程序设计语言和Java平台的总称。</p>
+    </div>
+    <div id="exportExcel" class="row">
+        <h3 class="text-primary">MVC</h3>
+        <h4>导出Excel .xlsx文件</h4>
+        <pre><code class="java">
+        // 固定保留2位小数
+        @GetMapping("/export/xlsx")
+        public void exportXlsx(@RequestParam("id")Integer id, HttpServletResponse response) {
+            try {
+                String name = "文件名";
+                response.setContentType("application/octet-stream;charset=ISO8859-1");
+                response.setHeader("Content-Disposition", "attachment;filename="+new String(name.getBytes(), "ISO8859-1") + ".xlsx");
+
+                this.exportData(id, response.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void exportCard(Integer activityId, OutputStream outputStream) {
+            List list = mapper.selectList(activityId);
+            FileInputStream fileInputStream = null;
+            try {
+                // 预先准备好的导出模板 可用自定义样式
+                fileInputStream = new FileInputStream(appProperty.getSeatTemplate());
+                XSSFWorkbook sheets = new XSSFWorkbook(fileInputStream);
+                XSSFSheet sheet = sheets.getSheetAt(0);
+                XSSFCellStyle style = sheets.createCellStyle();
+                style.setAlignment(HorizontalAlignment.CENTER);
+                fileInputStream.close();
+                for (int i = 0; i < list.size(); i++) {
+                    Vo vo = list.get(i);
+                    XSSFRow row = sheet.createRow(i + 1);
+                    XSSFCell cell0 = row.createCell(0);
+                    cell0.setCellStyle(style);
+                    cell0.setCellValue(vo.getParticipant());
+                }
+
+                sheets.write(outputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        </code></pre>
+    </div>
+
+</div>
+
+<script>
+    hljs.highlightAll();
+
+</script>
+</body>
+</html>

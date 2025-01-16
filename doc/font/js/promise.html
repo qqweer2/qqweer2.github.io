@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Promise</title>
+</head>
+<body>
+    <h1>Promise用法</h1>
+    <pre>
+    <code lang="javascript">
+
+    </code>
+    </pre>
+<script>
+function fn(arg, time) {
+    return new Promise((resolve, reject)=>{
+        setTimeout(() => {resolve(arg)}, time)
+    })
+}
+function byThen() {
+    console.log('begin a')
+    fn('a', 200).then(res => {
+        console.log('完成回调', res)
+    })
+    console.log('end a')
+    console.log('begin b')
+    fn('b', 100).then(res => {
+        console.log('完成回调', res)
+    })
+    console.log('end b')
+}
+//byThen()
+
+async function byAwait() {
+    console.log('begin aa')
+    let a = await fn('aa', 200)
+    console.log('完成回调1', a)
+    console.log('begin bb')
+    let b = await fn('bb', 100)
+    console.log('完成回调2',b)
+}
+//byAwait()
+
+function byAll() {
+    Promise.all([fn('aa', 200), fn('bb', 100)])
+        .then(res => {
+            console.log('完成所有,回调', res)
+        })
+}
+//byAll()
+
+function byRace() {
+    Promise.race([fn('aa', 200), fn('bb', 100)])
+        .then(res => {
+            console.log('完成任一,回调', res)
+        })
+}
+//byRace()
+
+// async函数 默认返回promise
+async function afn(arg) {
+    return arg
+}
+
+console.log('开始调用异步')
+afn('a').then(res => {
+    console.log('调用完成', res)
+})
+console.log('结束调用异步')
+</script>
+<style>
+</style>
+</body>
+</html>

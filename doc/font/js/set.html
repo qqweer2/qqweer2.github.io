@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Set</title>
+</head>
+<body>
+    <h1>Set用法</h1>
+    <pre>
+
+    <code lang="javascript">
+        // 创建
+        const a = new Set()
+        const a = new Set([1,2,3,1])
+        Array.from(a); //  [1, 2, 3]
+        // 长度
+        a.size; // 3
+        // 添加
+        a.add(4)
+        // 删除
+        a.delete(1)
+        a.clear()
+        // 是否包含
+        a.has(1)
+
+        // 迭代
+        const s = new Set();
+        s.add(1).add(2).add(3);
+        Array.from(s.keys()); // [1, 2, 3]
+        Array.from(s.values()); // [1, 2, 3]
+        Array.from(s.entries()); // [[1, 1], [2, 2], [3, 3]]
+
+        for (const i of s) {
+            console.log(i);
+        } // 1, 2, 3
+
+        s.forEach((value, key) => console.log(key + ' : ' + value));
+        // 1 : 1 2 : 2 3 : 3
+
+        // 不支持reduce
+    </code>
+    </pre>
+    <div id="frame" style="height: 300px;"></div>
+    <script src="/html/plugin/jquery/jquery.1.11.3.min.js"></script>
+<script>
+
+</script>
+<style>
+</style>
+</body>
+</html>

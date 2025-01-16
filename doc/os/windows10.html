@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Window 10</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#install">安装</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">系统设置 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#weiruanpinyin">微软拼音</a></li>
+                <li><a href="#iis">开启IIS服务</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+
+    </div>
+    <div id="install" class="row">
+        <h3 class="text-primary">安装系统</h3>
+        <h4>KMS激活</h4>
+        <p>slmgr -ipk 7GN97-FQ6DF-QBMYV-28KM2-76FCK 安装密钥</p>
+        <p>slmgr -skms kms.03k.org 安装服务</p>
+        <p>slmgr -ato 执行激活，<span class="text-danger">可能无法一次性成功，需要多次分时尝试</span></p>
+        <p>slmgr.vbs -xpr 查看激活时长</p>
+        <p>slmgr.vbs -dlv 查看激活详情</p>
+        <h5>LTSC版可用密钥</h5>
+        <p>7GN97-FQ6DF-QBMYV-28KM2-76FCK</p>
+        <p>63BNG-G9PVH-7W9X4-9RBQH-WK9R3</p>
+        <p>N22FM-PRGY9-7HPVH-GJRDK-V23F3</p>
+        <h5>可用服务地址</h5>
+        <p>zh.us.to</p>
+        <p>kms.03k.org</p>
+        <p>kms.chinancce.com</p>
+        <p>kms.shuax.com</p>
+        <p>kms.dwhd.org</p>
+        <p>kms.luody.info</p>
+        <p>kms.digiboy.ir</p>
+        <p>kms.lotro.cc</p>
+        <p>www.zgbs.cc</p>
+        <p>cy2617.jios.org</p>
+    </div>
+
+    <div id="weiruanpinyin" class="row">
+        <h3 class="text-primary">系统设置</h3>
+        <h4>微软拼音</h4>
+        <h5>简/繁体</h5>
+        <p>Ctrl+Shift+F</p>
+
+        <h4 id="iis">IIS服务</h4>
+        <p></p>
+    </div>
+
+
+</div>
+
+<script>
+    hljs.highlightAll();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Hadoop3</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">安装 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#install">环境准备</a></li>
+                <li><a href="#install-etc">配置文件</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="../">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Hadoop是一个由Apache基金会所开发的分布式系统基础架构。用户可以在不了解分布式底层细节的情况下，开发分布式程序。充分利用集群的威力进行高速运算和存储。Hadoop实现了一个分布式文件系统（ Distributed File System），其中一个组件是HDFS（Hadoop Distributed File System）。HDFS有高容错性的特点，并且设计用来部署在低廉的（low-cost）硬件上；而且它提供高吞吐量（high throughput）来访问应用程序的数据，适合那些有着超大数据集（large data set）的应用程序。HDFS放宽了（relax）POSIX的要求，可以以流的形式访问（streaming access）文件系统中的数据。Hadoop的框架最核心的设计就是：HDFS和MapReduce。HDFS为海量的数据提供了存储，而MapReduce则为海量的数据提供了计算。</p>
+    </div>
+    <div id="exportExcel" class="row">
+        <h3 class="text-primary" id="install">安装</h3>
+        <h4 id="install-dev">环境准备</h4>
+        <h5>网络拓扑</h5>
+        <p>根据要求，NameNode, SecondNameNode, YarnManager三者不能在同一台服务器，故而至少需要三台服务器才可构建集群</p>
+
+        <h5>配置JDK</h5>
+        <p>见<a href="../java/se.html#env-liunx">Java SE liunx配置</a></p>
+        <h4 id="install-etc">配置文件</h4>
+        <p>Hadoop默认配置文件在$Hadoop_home/etc下，对于需要修改的配置，将其复制出做出修改，然后放到目录下</p>
+        <h5>核心配置</h5>
+        <pre><code class="xml" id="core-site">
+        </code></pre>
+        <h5>存储配置</h5>
+        <pre><code class="xml" id="hdfs-site">
+        </code></pre>
+        <h5>调度配置</h5>
+        <pre><code class="xml" id="yarn-site">
+        </code></pre>
+        <h5>计算配置</h5>
+        <pre><code class="xml" id="mapred-site">
+        </code></pre>
+    </div>
+
+</div>
+
+<script>
+    let load = 0;
+    function loadXML(name) {
+        $.ajax({
+            url: `asset/${name}.xml`,
+            type: 'GET',
+            dataType: 'text',
+            success: function (xml) {
+                $(`#${name}`).text(xml)
+                load++;
+            }
+        })
+        $(`#${name}`).parent('pre').before(`<p><span>${name}.xml</span><a href="asset/${name}.xml" download>下载</a></p>`)
+    }
+    loadXML('core-site')
+    loadXML('hdfs-site')
+    loadXML('yarn-site')
+    loadXML('mapred-site')
+
+    // 等待动态代码加载完成在着色
+    let internal = setInterval(function () {
+        if (load == 4) {
+            clearInterval(internal);
+            hljs.highlightAll();
+        }
+    }, 100)
+</script>
+</body>
+</html>

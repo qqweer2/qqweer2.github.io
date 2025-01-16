@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据分组</title>
+</head>
+<body>
+<script>
+    let arr = []
+    for (let i = 0; i < 10000; i++) {
+        arr.push(parseFloat((Math.sin(i) * 200 + Math.random() * 100).toFixed(1) ))
+    }
+    console.log(arr)
+
+    function group(array, size, keyCall) {
+        // 找出数组的最大值 最小值
+        let max = array[0],min =array[1];
+        for (let i = 0; i <array.length; i++) {
+            let item = array[i];
+            if (item>max) max = item;
+            if (item<min) min = item;
+        }
+        // 计算步进
+        let step = (max-min) / size;
+        console.log('min=', min, 'max=', max, ' step=', step);
+        // 切片
+        let ranges = [];
+        for (let i = 1; i <= size; i++) {
+            let up = min + i * step;
+            let key = keyCall(up);
+            ranges.push({key, num: 0})
+        }
+        // 分组
+        for (let item of array) {
+            let hit = false;
+            for (let r of ranges) {
+                if (item <= r.key) {
+                    hit = true;
+                    r.num++;
+                    break;
+                }
+            }
+            // 补偿超出上界
+            if (!hit) ranges[size-1].num++;
+        }
+        let total = ranges.reduce((a, b) => a+b.num, 0)
+        console.log('total=', total)
+        return ranges;
+    }
+    let ranges = group(arr, 12, up => parseFloat(up.toFixed(1)));
+    console.log('分组结果', ranges)
+</script>
+
+</body>
+</html>

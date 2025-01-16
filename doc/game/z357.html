@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>真三国无双7</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#wei">魏</a></li>
+        <li><a href="#shu">蜀</a></li>
+        <li><a href="#wu">吴</a></li>
+        <li><a href="#jin">晋</a></li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>真三国无双7-猛将传。</p>
+    </div>
+
+    <div id="wei" class="row">
+        <h3 class="text-success">魏-本传</h3>
+        <div id="weiChart" style="width: 99%; height: 810px;"></div>
+        <h3 class="text-success">魏-外传</h3>
+        <div id="wei2Chart" style="width: 99%; height: 760px;"></div>
+    </div>
+
+    <div id="shu" class="row">
+        <h3 class="text-success">蜀-本传</h3>
+        <div id="shuChart" style="width: 99%; height: 810px;"></div>
+        <h3 class="text-success">蜀-外传</h3>
+        <div id="shu2Chart" style="width: 99%; height: 760px;"></div>
+    </div>
+
+    <div id="wu" class="row">
+        <h3 class="text-success">吴-本传</h3>
+        <div id="wuChart" style="width: 99%; height: 810px;"></div>
+        <h3 class="text-success">吴-外传</h3>
+        <div id="wu2Chart" style="width: 99%; height: 760px;"></div>
+    </div>
+
+    <div id="jin" class="row">
+        <h3 class="text-success">晋-本传</h3>
+        <div id="jinChart" style="width: 99%; height: 810px;"></div>
+        <h3 class="text-success">晋-外传</h3>
+        <div id="jin2Chart" style="width: 99%; height: 760px;"></div>
+    </div>
+
+</div>
+
+<script>
+    //hljs.highlightAll();
+// https://www.kxdw.com/gonglue/102.html
+function createCharts(dom, data, links) {
+    let chart = echarts.init(dom);
+    const option = {
+        title: { text: '' },
+        tooltip: {
+            formatter: function (x) {
+                let msg = x.data.explain;
+                return !msg?'':msg.replace(/\n/g,'<br>');
+            }
+        },
+        series: [
+            {
+                type: 'graph',
+                layout: 'force',
+                //symbol: 'none',
+                // 节点大小
+                symbolSize: 70,
+                roam: true,
+                edgeSymbol: ['circle', 'arrow'],
+                edgeSymbolSize: [4, 10],
+                edgeLabel: {
+                    normal: {
+                        textStyle: {
+                            fontSize: 20
+                        }
+                    }
+                },
+                force: {
+                    repulsion: 600,
+                    edgeLength: [20, 500]
+                },
+                draggable: true,
+                itemStyle: {
+                    normal: {
+                        color: '#4b565b'
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        width: 2,
+                        color: 'target',
+                    }
+                },
+                edgeLabel: {
+                    normal: {
+                        show: true,
+                        formatter: function (x) {
+                            return x.data.name;
+                        }
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: function (x) {
+                            return x.data.name;
+                        },
+                        textStyle: {
+                        }
+                    }
+                },
+                data,
+                links
+            }
+        ]
+    };
+    chart.setOption(option);
+}
+
+</script>
+<script src="js/wei.js"></script>
+<script src="js/shu.js"></script>
+<script src="js/wu.js"></script>
+<script src="js/jin.js"></script>
+</body>
+</html>

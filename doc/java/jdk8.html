@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Java jdk8</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#Lambda">Lambda</a></li>
+        <li><a href="#Stream">Stream</a></li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Java Steam 是JDK8新特性。</p>
+    </div>
+    <div id="Lambda" class="row">
+        <h3 class="text-primary">Lambda</h3>
+        <p>Lambda表达式允许将单一功能的代码块直接绑定到一个函数参数上，简化了匿名内部类和闭包的使用，使得代码更加简洁和灵活。</p>
+        <h4>函数式接口</h4>
+        <p>当接口只有1个方法时， 实现类可以简化为 (参数) -> {实现}</p>
+        <h4>方法引用</h4>
+        <p>当函数式接口只有1个参数，且实现只有1行代码时， 可简化为 调用对象::方法</p>
+        <pre><code class="java">
+        public static interface Fun {
+            boolean trans(Integer i);
+        }
+        public static List&lt;Integer&gt; transList(List&lt;Integer&gt; list, Fun fun) {
+            List&lt;Integer&gt; newList = new ArrayList<>();
+            for (Integer integer : list) {
+                if (integer == null) continue;
+                if (fun.trans(integer)) newList.add(integer);
+            }
+            return newList;
+        }
+
+        public static boolean isOdd(Integer i) {
+            return i % 2 == 1;
+        }
+
+        public static void main(String[] args) {
+            List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5, 7);
+            // jdk7 创建1个匿名内部类实现Fun的方法
+            List&lt;Integer&gt; list1 = transList(list, new Fun() {
+                    @Override
+                    public boolean trans(Integer i) {
+                        return i % 2 == 1;
+                    }
+                });
+                System.out.println(list1);
+            }
+
+            // jdk8 使用函数式编程
+            List&lt;Integer&gt; list2 = transList(list, item -> item % 2 == 1);
+            System.out.println(list2);
+
+            // jdk8 使用方法引用
+            List&lt;Integer&gt; list3 = transList(list, SteamTest::isOdd);
+            System.out.println(list3);
+        }
+        </code></pre>
+    </div>
+    <div id="Stream" class="row">
+        <h3 class="text-primary">Stream</h3>
+        <p>Stream API 提供了一组操作符，用于对集合进行过滤、映射、归约等操作，类似于数据库查询语言的语法，使得数据处理更加直观和高效。</p>
+        <h4>Stream</h4>
+        <pre><code class="java">
+        public static void main(String[] args) {
+            Stream&lt;Integer&gt; stream = Stream.of(1, 2, 3, 4, 5, 7, 3, 5, 8);
+            // 转为int流
+            // reduce 进行求和
+            int total = stream.mapToInt(Integer::intValue).reduce(0, (left, right) -> left + right);
+            System.out.println(total);
+            // 使用方法引用进行求和
+            int total = stream.mapToInt(Integer::intValue).reduce(0, Jdk8Test::add);
+            System.out.println(total);
+
+            Stream&lt;String&gt; stream = Stream.of("1", "2", "3", "4", "a", "7", "3", "5", "8", "");
+            Pattern compile = Pattern.compile("^\\d+$");
+            // filter 去除非数字
+            // filter 保留奇数
+            // 转为int流
+            // sum 进行求和
+            int total = stream.filter(str -> compile.matcher(str).matches())
+                    .mapToInt(Integer::parseInt)
+                    .filter(i -> i % 2 == 1)
+                    .sum();
+            System.out.println(total);
+        }
+
+        public static int add(int x, int y) {
+            return x + y;
+        }
+        </code></pre>
+        <h4>List</h4>
+        <pre><code class="java">
+        public static void main(String[] args) {
+            List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5, 7);
+            // 遍历并打印
+            list.stream().forEach(integer -> System.out.println(integer));
+            list.stream().forEach(System.out::println);
+
+            // filter 实现过滤功能
+            List&lt;Integer&gt; collect = list.stream().filter(item -> Objects.equals(2, item))
+                    .collect(Collectors.toList());
+            System.out.println(collect);
+
+            // map 实现类型转化
+            // Collectors.joining(拼接符， 前缀， 后缀) 对 Stream&lt;String&gt; 拼接
+            String res = list.stream().filter(item -> item % 2==0)
+                    .map(item -> String.valueOf(item))
+                    .collect(Collectors.joining(","));
+
+            System.out.println(res);
+        }
+
+        </code></pre>
+    </div>
+</div>
+
+<script>
+    hljs.highlightAll();
+
+</script>
+</body>
+</html>

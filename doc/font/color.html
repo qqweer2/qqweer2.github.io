@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <title>颜色表</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <span style="background-color: rgb(1,55,123)">000000</span>
+        <span style="background-color: #ff0000">000000</span>
+    </div>
+</div>
+<style>
+    .row {margin-bottom: 4px;}
+    .row span {padding: 3px 6px; color: #ffffff}
+</style>
+<script>
+    const $container = $(".container").eq(0)
+    for (let i = 0; i < 256; i+=4) {
+        for (let j = 0; j < 256; j+=4) {
+            //let $row = $('<div>').addClass('row');
+            for (let k = 0; k < 256; k+=4) {
+                let $span = $('<span>')
+                let text = i*256*256 + j*256 +k;
+                //$span.text(color.toUpperCase()).css({'background-color': '#'+color});
+                //$row.append($span);
+                console.log(toHex2(text))
+            }
+            //$container.append($row)
+        }
+
+    }
+    function toHex2(i) {
+        let k = i.toString(16);
+        if (k.length<6) return '0' + k;
+        else return k;
+    }
+</script>
+</body>
+</html>

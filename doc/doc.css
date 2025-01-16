@@ -1,0 +1,73 @@
+#nav {
+    margin-bottom: 0px!important;
+}
+.header {
+    width: 100%;
+    position: fixed;
+    bottom: 10px;
+    text-align: right;
+}
+.header .btn {
+    margin-right: 10px;
+}
+.row h3 {
+    border-left: 3px solid;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 10px 10px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background-color: #fafafa;
+}
+.row h4 {
+    padding-left: 14px;
+}
+.row h5 {
+    margin-left: 20px;
+}
+.row h6 {
+    margin-left: 20px;
+}
+.row p {
+    margin-left: 22px;
+    text-indent: 1em;
+}
+.row img {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+.row div {
+    margin-left: 20px;
+}
+.row .table {
+    margin-left: 24px;
+    width: calc(96vw - 24px) !important;
+}
+.row h4:before {
+    content: '★ ';
+    color: #3c763d;
+}
+.row h4:after {
+    content: ' ★';
+    color: #3c763d;
+}
+.row h5:before {
+    content: "◉  ";
+    color: #a94442;
+}
+.row h6:before {
+    content: "☉  ";
+    color: #8a6d3b;
+}
+.row pre {
+    margin: 0 22px;
+}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.text-blink {
+    animation: blink 1s infinite;
+}

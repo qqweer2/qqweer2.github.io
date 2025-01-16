@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>MySql</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#manager">管理</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">手册 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#tool">日期函数</a></li>
+                <li><a href="#dateFormat">日期格式</a></li>
+                <li><a href="#toolStr">字符串函数</a></li>
+                <li><a href="#convert">转换函数</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#toolFun">自定义函数</a></li>
+                <li><a href="#toolTig">自定义触发器</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#toolOver">窗口函数</a></li>
+                <li><a href="#toolCTE">公共表表达式</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">
+            基本概念
+        </h3>
+        <h4>索引定义</h4>
+        <p>按照用户指定的任意字段对数据进行排序的一种数据结构。</p>
+        <h4>索引分类</h4>
+        <h5>主键索引</h5>
+        <h5>唯一索引</h5>
+        <h5>普通索引</h5>
+        <h5>全文索引</h5>
+        <h5>组合索引</h5>
+        <h4>聚簇索引</h4>
+        <p>数据和索引存储在一起的，比如InnoDB下建立的主键索引</p>
+        <h4>非聚簇索引</h4>
+        <p>数据和索引分开存储。MyISAM下建立的索引</p>
+        <h4>索引下推</h4>
+        <p>index condition pushdown， 在5.6版本后推出的技术。在有组合索引时候，MySQL在索引做多条件判断，而不是返回MySQL服务，由服务做二次判断，这样索引下推在非主键索引上的优化，可以有效减少回表的次数，大大提升了查询的效率。</p>
+        <p>关闭命令</p>
+        <p>set optimizer_switch='index_condition_pushdown=off';</p>
+        <h4>回表</h4>
+        <p>通过非主键索引找到主键，再通过主键去找数据的过程</p>
+        <h4>存储引擎</h4>
+        <table class="table" id="engine">
+        </table>
+        <h4>执行计划</h4>
+        <p>explan sql</p>
+        <h5>结果列</h5>
+        <p>id 顺序
+            select_tpye
+            table 查询涉及的表
+            partitions 查询涉及的分区表
+            type
+            possiable_keys 查询可能用到的索引
+            key 使用的索引
+            ken_length
+            ref
+            rows 可能返回的行数
+            filtered
+            extra 扩展信息
+            using index 使用索引
+            using index condition 使用索引下推
+            using filesort 排序
+        </p>
+
+        <h4>锁</h4>
+        <h5>MyISAM表级锁模式：</h5>
+        <p>表共享读锁 （Table Read Lock）：不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；</p>
+        <p>表独占写锁 （Table Write Lock）：会阻塞其他用户对同一表的读和写操作；</p>
+        <p>在执行查询语句（SELECT）前，会自动给涉及的表加读锁，在执行更新操作（UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预，因此，用户一般不需要直接用 LOCK TABLE 命令给 MyISAM 表显式加锁。</p>
+        <h5>InnoDB行锁模式：</h5>
+        <p>共享锁（S）：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁。</p>
+        <p>排他锁（X）：允许获得排他锁的事务更新数据，阻止其他事务取得相同数据集的共享读锁和排他写锁。</p>
+        <h5>InnoDB行表模式：</h5>
+        <p>意向共享锁（IS）：事务打算给数据行加行共享锁，事务在给一个数据行加共享锁前必须先取得该表的 IS 锁。</p>
+        <p>意向排他锁（IX）：事务打算给数据行加行排他锁，事务在给一个数据行加排他锁前必须先取得该表的 IX 锁。</p>
+        <p>意向锁是 InnoDB 自动加的， 不需用户干预。对于 UPDATE、 DELETE 和 INSERT 语句， InnoDB会自动给涉及数据集加排他锁（X)；对于普通 SELECT 语句，InnoDB 不会加任何锁； 事务可以通过以下语句显式给记录集加共享锁或排他锁：</p>
+        <p>共享锁（S）：SELECT * FROM table_name WHERE ... LOCK IN SHARE MODE。 其他 session 仍然可以查询记录，并也可以对该记录加 share mode 的共享锁。但是如果当前事务需要对该记录进行更新操作，则很有可能造成死锁。</p>
+        <p>排他锁（X）：SELECT * FROM table_name WHERE ... FOR UPDATE。其他 session 可以查询该记录，但是不能对该记录加共享锁或排他锁，而是等待获得锁</p>
+    </div>
+
+    <div id="manager" class="row">
+        <h3 class="text-warning">管理</h3>
+        <h4>用户、权限</h4>
+        <pre><code lang="sql">
+        -- 创建用户
+        CREATE USER 'username'@'%' IDENTIFIED BY 'password';
+        -- 删除用户
+        DROP USER 'username'@'%'
+        -- 授权
+        GRANT privileges ON databasename.tablename TO 'username'@'%'
+        -- 授予用户所有库的权限
+        GRANT ALL ON *.* TO 'username'@'%';
+        -- 权限： create,alter,drop,select,insert,update,delete
+
+        -- 撤销权限
+        REVOKE ALL databasename.tablename FROM 'username'@'%';
+        </code></pre>
+        <h4>运维</h4>
+    </div>
+
+    <div id="tool" class="row">
+        <h3 class="text-success">手册、工具、方法</h3>
+        <h4>日期函数</h4>
+        <h5>时间单位</h5>
+        <p>HOUR 小时
+            MINUTE 分
+            SECOND 秒
+            MICROSECOND 毫秒
+            YEAR 年
+            MONTH 月
+            DAY 日
+            WEEK 周
+            QUARTER 季
+            YEAR_MONTH 年和月
+            DAY_HOUR 日和小时
+            DAY_MINUTE 日和分钟
+            DAY_ SECOND 日和秒
+            HOUR_MINUTE 小时和分
+            HOUR_SECOND 小时和秒
+            MINUTE_SECOND 分钟和秒</p>
+        <h5>用例</h5>
+        <pre><code class="sql">
+        -- 获取数据库当前时间
+        select CURDATE() --2021-12-17
+        select NOW() --2021-12-17 2021-12-17 18:08:04
+        select DAYOFWEEK() --2021-12-17 2021-12-17 18:08:04
+
+        SELECT DAYOFWEEK(now()) -- 1 星期日 2星期一 ...7星期六，参数可以是日期、字符串
+        SELECT DAYOFWEEK('2021-12-12') -- 3
+
+        -- 当前日期到2021-12-01的天数差
+        SELECT DATEDIFF( NOW(), STR_TO_DATE('2021-12-01','%Y-%m-%d'))
+        SELECT DATEDIFF( curdate(), STR_TO_DATE('2021-12-01','%Y-%m-%d'))
+        -- 在当前时间加1天
+        -- 2021-12-17 18:29:10	2021-12-18 18:29:10
+        select now(),date_add(now(),interval 1 day),date_sub(now(),interval 10 minute)
+        </code></pre>
+
+        <h4 id="dateFormat">日期格式</h4>
+        <h5>STR_TO_DATE</h5>
+        <p>STR_TO_DATE(str, format) 按指定格式将字符串转为日期</p>
+        <h5>DATE_FORMAT</h5>
+        <p>DATE_FORMAT(date,format) 按指定格式格式化日期</p>
+        <h5>format 格式</h5>
+        <p>%Y	年，4 位；  %y	年，2 位</p>
+        <p>%m	月，数值(00-12)； %M	月名；%b	缩写月名</p>
+        <p>%D	带有英文前缀的月中的天；%d	月的天，数值(00-31)；%e	月的天，数值(0-31)</p>
+        <p>%H	小时 (00-23)；%h	小时 (01-12)；%I	小时 (01-12)</p>
+        <p>%p	AM 或 PM</p>
+        <p>%i	分钟，数值(00-59)</p>
+        <p>%S	秒(00-59)；%s	秒(00-59)</p>
+        <p>%U	周 (00-53) 星期日是一周的第一天</p>
+        <p>%u	周 (00-53) 星期一是一周的第一天</p>
+        <p>%j	年的天 (001-366)</p>
+        <pre><code class="sql">
+        -- 2024-03-03 11:32:09 常用格式
+        SELECT DATE_FORMAT(NOW(),'%Y-%m-%m %H:%i:%s')
+        -- 2024-03-11 071
+        SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %j')
+        -- 2023-04-01
+        SELECT STR_TO_DATE('2023-04-01','%Y-%m-%d')
+        -- 2023-03-12 %j需要配合%Y使用
+        SELECT STR_TO_DATE('2023 071','%Y %j')
+        -- 2023-12-01 2024-01-01 2023不是闰年，它的第366天应该是2024年的第1天
+        SELECT STR_TO_DATE('2023 365','%Y %j'), STR_TO_DATE('2023 366','%Y %j')
+
+        -- 2024-03-11 11:25 AM  2024-03-11th 11:26 AM
+        SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %h:%i %p'), DATE_FORMAT(NOW(),'%Y-%m-%D %h:%i %p')
+
+        -- 2024-March-11 2024-Mar-11
+        SELECT DATE_FORMAT(NOW(),'%Y-%M-%d'), DATE_FORMAT(NOW(),'%Y-%b-%d')
+        </code></pre>
+
+        <h4 id="toolStr">字符串函数</h4>
+        <p>LENGTH(str)	计算字节长度	utf-8 中文算3</p>
+        <p>CHAR_LENGTH(str)	字符长度 中文算1</p>
+        <h5>用例</h5>
+        <pre><code class="sql">
+        -- 6  2
+        SELECT LENGTH('你好'),CHAR_LENGTH('你好')
+        </code></pre>
+
+        <h4 id="convert">转换函数</h4>
+        <h5>CONVERT</h5>
+        <p>CONVERT(expr, type)， type可指定的类型如下:</p>
+        <p>DATE -&gt; 按yyyy-MM-dd格式转为date</p>
+        <p>DATETIME -&gt; 按yyyy-MM-dd HH:mm:ss格式转为datetime</p>
+        <p>TIME -&gt; 按HH:mm:ss格式转为time</p>
+        <p>CHAR -&gt; char(length) 指定长度的字符</p>
+        <p>SIGNED -&gt; int 有符号的整数</p>
+        <p>UNSIGNED -&gt; int 无符号整数</p>
+        <p>Decimal -&gt; decimal(length, decimal) 指定长度的浮点数</p>
+        <p>BINARY -&gt; 二进制格式</p>
+        <pre><code class="sql">
+        SELECT CONVERT('2022-12-25', DATE)
+        SELECT CONVERT('2022-12-25 12:00:05', DATETIME)
+        SELECT CONVERT('12:00:05', TIME)
+        SELECT CONVERT(NOW(), DATE)
+        SELECT CONVERT(NOW(), DATETIME)
+        SELECT CONVERT(NOW(), TIME)
+        -- '150'
+        SELECT CONVERT(150, CHAR)
+        -- 1 1 1 2
+        SELECT CONVERT('1.4', SIGNED), CONVERT('1.5', SIGNED), CONVERT(1.4, SIGNED), CONVERT(1.5, SIGNED)
+        -- -1 -1 -1 -2
+        SELECT CONVERT('-1.4', SIGNED), CONVERT('-1.5', SIGNED), CONVERT(-1.4, SIGNED), CONVERT(-1.5, SIGNED)
+        -- 1 1 1 2
+        SELECT CONVERT('1.4', UNSIGNED), CONVERT('1.5', UNSIGNED), CONVERT(1.4, UNSIGNED), CONVERT(1.5, UNSIGNED)
+        -- 18446744073709551615	18446744073709551615	18446744073709551615	18446744073709551614
+        SELECT CONVERT('-1.4', UNSIGNED), CONVERT('-1.5', UNSIGNED), CONVERT(-1.4, UNSIGNED), CONVERT(-1.5, UNSIGNED)
+        -- 18446744073709551615	18446744073709551615	18446744073709551615	18446744073709551614
+        SELECT CONVERT('-1', UNSIGNED), CONVERT('-1a', UNSIGNED), CONVERT(-1, UNSIGNED), CONVERT(-2, UNSIGNED)
+
+        -- 1 2 -1 -2
+        SELECT CONVERT(1.4, DECIMAL), CONVERT(1.5, DECIMAL), CONVERT(-1.4, DECIMAL), CONVERT(-1.5, DECIMAL)
+        -- 1.46	1.6	-1.46 -1.6
+        SELECT CONVERT(1.456, DECIMAL(3,2)), CONVERT(1.55, DECIMAL(3,1)), CONVERT(-1.456, DECIMAL(4,2)), CONVERT(-1.55, DECIMAL(2,1))
+        -- 9.99 超出范围
+        SELECT CONVERT(11.456, DECIMAL(3,2))
+        </code></pre>
+
+        <h4 id="toolFun">自定义函数</h4>
+        <h5>用例一：权限表树形结构 id<-pid</h5>
+        <pre><code class="sql">
+        set GLOBAL log_bin_trust_function_creators=1;
+
+        DROP FUNCTION IF EXISTS `PermissionChild`;
+        delimiter ;;
+        CREATE FUNCTION `PermissionChild`(rootId INT)
+         RETURNS varchar(1000) CHARSET utf8
+        BEGIN
+            DECLARE ptemp VARCHAR(1000);
+            DECLARE ctemp VARCHAR(1000);
+            SET ptemp = '#';
+            SET ctemp =CAST(rootId AS CHAR);
+            WHILE ctemp IS NOT NULL DO
+                SET ptemp = CONCAT(ptemp,',',ctemp);
+                SELECT GROUP_CONCAT(id) INTO ctemp FROM sys_auth_perm
+                    WHERE FIND_IN_SET(pid,ctemp)>0;
+            END WHILE;
+            RETURN ptemp;
+        END;;
+        delimiter ;
+        </code></pre>
+        <h5>用例二：经纬度函数</h5>
+        <pre><code lang="sql">
+        CREATE DEFINER=CURRENT_USER FUNCTION `GetDistance`(
+            aLot DECIMAL(11,8), #a点经度
+            aLat DECIMAL(11,8), #a点纬度
+            bLot DECIMAL(11,8), #b点经度
+            bLat DECIMAL(11,8)  #b点纬度
+          ) RETURNS int(11)
+        BEGIN
+            RETURN round (
+              6370986 * ACOS(
+                COS(RADIANS(aLat)) * COS(RADIANS(bLat)) * COS(RADIANS(bLot) - RADIANS(aLot)) +
+                SIN(RADIANS(aLat)) * SIN(RADIANS(bLat))
+              ),
+            0);
+        END
+        </code></pre>
+
+        <h4 id="toolTig">自定义触发器</h4>
+        <p>DELIMITER //</p>
+        <p>create trigger 名字 before|after INSERT|UPDATE|DELETE on 表1</p>
+        <p>for each row</p>
+        <p>begin</p>
+        <p style="text-indent: 4em">sql语句;</p>
+        <p>end//</p>
+        <p>DELIMITER ;</p>
+        <p>MySQL提供new|old.colume来获取触发行（当前行）的值，对于new可用于INSERT、UPDATE，对于old可用于UPDATE、DELETE</p>
+        <p>用例一：老师-学生 one-to-many，老师表有学生数量字段，由触发器维护</p>
+
+        <pre><code class="sql">
+        DROP TABLE IF EXISTS `t_student`;
+        CREATE TABLE `t_student`  (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `tid` int(11) NULL DEFAULT NULL COMMENT 'teacher.id',
+          `name` varchar(20) DEFAULT NULL,
+          PRIMARY KEY (`id`) USING BTREE
+        )
+        DROP TABLE IF EXISTS `t_teacher`;
+        CREATE TABLE `t_teacher`  (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` varchar(20) DEFAULT NULL,
+          `stus` int(11) NULL DEFAULT 0 COMMENT '学生数量',
+          PRIMARY KEY (`id`) USING BTREE
+        )
+
+        INSERT INTO t_teacher(name) VALUES('张三'),('张四');
+
+        DROP TRIGGER if EXISTS tig_student_insert_count;
+        DROP TRIGGER if EXISTS tig_student_delete_count;
+        DELIMITER //
+        -- 新增学生 更新老师表的学生数量
+        CREATE TRIGGER tig_student_insert_count AFTER INSERT ON t_student
+        FOR EACH ROW
+        BEGIN
+         DECLARE v_stus int;
+         SELECT count(*) INTO v_stus FROM t_student WHERE tid=new.tid;
+         UPDATE t_teacher SET stus=v_stus WHERE id=new.tid;
+        END//
+        -- 删除学生  更新老师表的学生数量
+        CREATE TRIGGER tig_student_delete_count AFTER DELETE ON t_student
+        FOR EACH ROW
+        BEGIN
+         DECLARE v_stus int;
+         SELECT count(*) INTO v_stus FROM t_student WHERE tid=old.tid;
+         UPDATE t_teacher SET stus=v_stus WHERE id=old.tid;
+        END//
+
+        DELIMITER ;
+
+        SHOW TRIGGERS;
+
+        INSERT INTO t_student(tid,name) VALUES(1,'李六');
+
+        DELETE FROM t_student WHERE id=6;
+        </code></pre>
+
+        <h4 id="toolOver">窗口函数</h4>
+        <p>MySQL8.0推出的新特性，功能介于聚合函数与行结果之间，即可进行聚合统计，也可以按行返回结果数量</p>
+        <h5>用例一：员工表，按部门统计平均工资，并计算每个员工与平均工资的差额</h5>
+        <pre><code class="sql">
+        CREATE TABLE `t_over`  (
+          `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+          `dept` varchar(10) NULL COMMENT '部门名',
+          `name` varchar(20) NULL COMMENT '姓名',
+          `salary` decimal(10, 2) NULL COMMENT '薪水',
+          PRIMARY KEY (`id`)
+        );
+        INSERT INTO t_over VALUES(null,'销售部','张三',1500),(null,'销售部','李四',2100),(null,'销售部','李五',2700),
+            (null,'客户部','王三',2000),(null,'客户部','王四',2000),(null,'客户部','王五',1800);
+        -- 使用窗口函数
+        SELECT *,salary-salary_avg salary_sub FROM
+        (SELECT id, dept, name, salary,
+        AVG(salary) over(PARTITION by dept) as salary_avg
+        FROM t_over) t
+        -- 按部门求平均工资 AVG(salary) over(PARTITION by dept)
+        -- 求全体平均工资 AVG(salary) over()
+
+        --使用左连接 原表与统计表（虚表）连接
+        SELECT a.*, b.salary_avg,a.salary-b.salary_avg salary_sub
+        FROM t_over a LEFT JOIN
+         (SELECT AVG(salary) salary_avg, dept FROM t_over GROUP BY dept) b
+         ON a.dept=b.dept
+        </code></pre>
+        <h5>用例二：按部门查询工资排名前两名的员工</h5>
+        <pre><code>
+        -- rank() 排名不连续
+        SELECT * FROM
+        (SELECT id, dept, name, salary,
+        rank() over(PARTITION by dept ORDER BY salary desc) as `rank_no`
+        FROM t_over) t WHERE rank_no <=2
+        -- dense_rank() 排名连续
+        SELECT * FROM
+        (SELECT id, dept, name, salary,
+        dense_rank() over(PARTITION by dept ORDER BY salary desc) as `rank_no`
+        FROM t_over) t WHERE rank_no <=2
+        </code></pre>
+
+        <h4 id="toolCTE">公共表表达式</h4>
+        <p>MySQL8.0推出的新特性，公共表表达式（Common Table Expression）是一个临时的查询结果，他存在于一条SQL语句中，可多次引用</p>
+        <h5>用例一：查询树形结构的部门表，指定一个起点查询所有的子节点</h5>
+        <pre><code>
+        WITH recursive cte as (
+         SELECT * FROM sys_auth_dept d WHERE d.id = 1
+         union ALL
+         SELECT d.* FROM sys_auth_dept d JOIN cte c ON d.pid = c.id
+        ) SELECT * FROM cte;
+        </code></pre>
+
+    </div>
+</div>
+
+<script>
+    hljs.highlightAll();
+    $('#engine').bootstrapTable({
+        columns: [
+            {field: 'index', title: '指标'},
+            {field: 'InnerDB', title: 'InnerDB'},
+            {field: 'MyISSM', title: 'MyISSM'}
+        ],
+        data: [
+            {index: '事务',InnerDB: '支持',MyISSM: '不'},
+            {index: '外键',InnerDB: '支持',MyISSM: '不'},
+            {index: 'MVCC',InnerDB: '支持',MyISSM: '不'},
+            {index: '锁',InnerDB: '行锁',MyISSM: '表锁'},
+            {index: '全文索引',InnerDB: '不',MyISSM: '支持'},
+            {index: '主键',InnerDB: '如果没有设定主键或者非空唯一索引，就会自动生成一个 6 字节的主键(用户不可见)，数据是主索引的一部分，附加索引保存的是主索引的值。',MyISSM: '允许没有任何索引和主键的表存在，索引都是保存行的地址。'},
+        ]
+    })
+</script>
+</body>
+</html>

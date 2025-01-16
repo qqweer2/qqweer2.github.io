@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>对象==判断</title>
+</head>
+<body>
+    <h1>对象==判断</h1>
+    <p>对象与数字、字符做==运算时， 先调用valueOf方法，若valueOf返回undefined， 则会继续调用toString方法</p>
+    <p>对象与对象做==运算，直接比内存地址；做===运行，先比类型</p>
+<script>
+    let a = {
+        n: 1,
+        valueOf() {
+            return this.n++
+        },
+        /*toString() {
+            return this.n++
+        }*/
+    }
+    console.log(a==1 && a==2 && a==3)
+
+    let b = {
+        valueOf() {
+            return "hello"
+        }
+    }
+    let c = {
+        name: "hello",
+        valueOf() {
+            return this.name;
+        }
+    }
+    const date = new Date()
+    let d = {
+        valueOf() {
+            return date
+        }
+    }
+    const x = 1;
+    let y = {
+        valueOf() {
+            return 1
+        }
+    }
+    console.log(b == "hello")
+    console.log(b == c)
+    console.log('date == d', d == date)
+    console.log('x == y', x == y)
+
+
+</script>
+</body>
+</html>

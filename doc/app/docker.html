@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ch-ZH">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../plugin/highlight/intellij-light.min.css" />
+    <link rel="stylesheet" type="text/css" href="../doc.css" />
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/bootstrap-extend/bootstrap-table-zh-CN-1.19.1.min.js"></script>
+    <script type="text/javascript" src="../../plugin/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="../../plugin/highlight/highlight.min.js"></script>
+    <title>Docker</title>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="#concept">概念</a></li>
+        <li><a href="#install">安装</a></li>
+        <li><a href="#command">命令</a></li>
+        <li><a href="#proxy">代理</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">示例 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#demo">MySQL</a></li>
+                <li><a href="#demoNginx">Nginx</a></li>
+                <li><a href="#demoRedis">Redis</a></li>
+                <li><a href="#demoMongoDB">MongoDB</a></li>
+                <li><a href="#demoOracle11g">Oracle 11g</a></li>
+                <li><a href="#demoNeo4j35">Neo4j</a></li>
+                <li><a href="#demoFTPD">FTPD</a></li>
+                <li><a href="#demoES">Elastic Search</a></li>
+                <li><a href="#demoNEXUS">NEXUS私服</a></li>
+                <li><a href="#demoMaven">Maven打包</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">构建 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#build">SpringBoot</a></li>
+                <li><a href="#buildSentinel">sentinel</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav" style="float: right;">
+        <li><a href="..">返回首页</a></li>
+    </ul>
+</nav>
+<div class="header">
+    <a href="#nav" class="btn btn-default">顶部</a>
+</div>
+<div class="container-fluid">
+    <div id="concept" class="row">
+        <h3 class="text-primary" style="margin-top: 0">基本概念</h3>
+        <p>Docker是一个开源的应用容器引擎，他直接安装在操作系统之上。</p>
+        <p>Docker主机：安装了docker程序的计算机</p>
+        <p>Docker客户端：连接主机进行操作的程序</p>
+        <p>Docker仓库（Registry）：存放各种打包好的软件镜像</p>
+        <p>Docker镜像（Images）： 软件的打包</p>
+        <p>Docker容器（Container）： 镜像启动后的实例</p>
+        <p>Docker公共仓库：hub.docker.com</p>
+    </div>
+    <div id="install" class="row">
+        <h3 class="text-primary">安装</h3>
+        <h4>Linux-CentOS</h4>
+        <p>uname -r 先检查liunx内核版本，要求高于3.1</p>
+        <p>yum install docker -y 安装</p>
+        <p>systemctl start docker 启动</p>
+        <p>systemctl enable docker 开机自动启动</p>
+        <p>systemctl stop docker 停止、关闭服务</p>
+        <h4>Windows</h4>
+
+    </div>
+
+    <div id="command" class="row">
+        <h3 class="text-success">命令</h3>
+        <p>docker -v 查看版本</p>
+        <h5>搜索镜像</h5>
+        <p>docker search 镜像名称</p>
+        <h5>下载镜像</h5>
+        <p>docker pull 镜像名称:tag</p>
+        <h5>保存镜像</h5>
+        <p>docker save -o 文件名.tar 镜像名称:tag</p>
+        <h5>载入镜像</h5>
+        <p>docker load -i 文件名.tar</p>
+        <h5>提交镜像</h5>
+        <p>docker commit -a 作者 -c Dockerfile -m 提交信息 -p 容器名 镜像名:tag</p>
+        <p>-p 暂停容器，停止的容器不需要此参数</p>
+        <h5>查看本地镜像</h5>
+        <p>docker images</p>
+        <h5>删除本地镜像</h5>
+        <p>docker rmi 镜像名称:tag</p>
+        <h5>制作镜像</h5>
+        <p>docker build -t 镜像名称:tag .</p>
+        <h5>启动容器</h5>
+        <p>docker run --name 容器名  -p 主机端口:容器端口 -d 镜像名称:tag [执行命令]</p>
+        <h6>参数设置-内存</h6>
+        <p>-m,--memory 内存限制,格式是数字加单位。单位可以为b,k,m,g。最小为4M</p>
+        <p>--meIory-swap 内存+交换分区大小总限制。格式同上。必须必-m设置的大</p>
+        <p>--memory-reservation内存的软性限制。格式同上</p>
+        <p>--oom-kill-disable 是否阻止OOM killer杀死容器,默认没设置</p>
+        <p>--oom-score-adj 容器被OOM killer 杀死的优先级，范围是[-1000,1000]，默认为O</p>
+        <p>--memory-swappiness 用于设置容器的虚拟内存控制行为。值为0~100之间的整数</p>
+        <p>--kernel-memory 核心内存限制。格式同上,最小为4M</p>
+        <h6>参数设置-CPU</h6>
+        <p>--cpuset-cpus="" 允许使用的CPU集，值可以为0-3,0,1</p>
+        <p>-c,--cpu-shares=0 CPU共享权值(相对权重)</p>
+        <p>cpu-period=0 限制CPU CFS的周期，范围从10oms~1s，即[1000,100000o]</p>
+        <p>--cpu-quota-0 限制CPU CFS配额，必须不小于1ms，即>= 1000</p>
+        <p>--cpuset-memS="" 允许在上执行的内存节点(MEMS)，只对 NUMA 系统有效</p>
+        <p> 在有多个容器竞争 CPU 时我们可以设置每个容器能使用的 CPU 时间比例。这个比例叫作共享权值，通过-c或--cpu-shares设置。Docker 默认每个容器的权值为1024。不设置或将其设置为0，都将使用这个默认值。系统会根据每个容器的共享权值和所有容器共享权值和比例来给容器分配 CPU 时间。</p>
+        <h5>进入容器</h5>
+        <p>docker exec -it 容器id/名称 /bin/bash</p>
+        <h5>停止容器</h5>
+        <p>docker stop 容器id/名称</p>
+        <h5>删除容器</h5>
+        <p>docker rm 容器id/名称</p>
+        <h5>查看容器</h5>
+        <p>docker ps -a</p>
+        <p> -a 所有容器</p>
+        <h5>查看容器配置</h5>
+        <p>docker inspect 容器id/名称</p>
+        <p>docker inspect 容器id/名称 | grep Mounts -A 20  查看容器目录映射</p>
+        <h5>修改映射</h5>
+        <p>1.停止Docker服务 systemctl stop docker</p>
+        <p>2.进入Docker容器的配置文件目录 cd /var/lib/docker/containers/</p>
+        <p>修改映射文件 vim hostconfig.json</p>
+        <h5>创建网络</h5>
+        <p>docker network create --driver brigde [--subnet 172.30.0.0/24 --gateway 172.30.0.1] 名称</p>
+        <p> --driver brigde 驱动 默认桥接</p>
+        <p> --subnet 自定义网段</p>
+        <p>--gateway 自定义网关</p>
+        <h5>删除网络</h5>
+        <p>docker network rm 名称</p>
+        <h5>查看网络</h5>
+        <p>docker network ls</p>
+        <p>docker network inspect 名称</p>
+        <h5>断开网络</h5>
+        <p>docker network disconnect 网络名称 容器名称</p>
+        <h5>连接网络</h5>
+        <p>docker network connect 网络名称 容器名称</p>
+        <p>更改容器网络模式需要重启容器</p>
+        <div id="commandChart" style="width: 66%; height: 480px;"></div>
+    </div>
+
+    <div id="proxy" class="row">
+        <h3 class="text-success">网络代理</h3>
+        <h4>配置Docker守护进程</h4>
+        <p>配置代理文件，适用于所有通过守护进程启动的容器和构建操作。</p>
+        <p>mkdir -p /etc/systemd/system/docker.service.d</p>
+        <p>vi /etc/systemd/system/docker.service.d/http-proxy.conf</p>
+        <pre><code lang="ini">
+        [Service]
+        Environment="HTTP_PROXY=http://your-proxy-address:port/"
+        Environment="HTTPS_PROXY=http://your-proxy-address:port/"
+        </code></pre>
+        <p>保存退出后，启动docker服务</p>
+        <p>systemctl daemon-reload</p>
+        <p>systemctl restart docker</p>
+
+        <h4>为单个容器配置网络代理</h4>
+        <p>如果只为特定的Docker容器配置网络代理，可以在运行容器时通过--env参数指定</p>
+        <p>docker run -it --env HTTP_PROXY="http://your-proxy-address:port" --env HTTPS_PROXY="http://your-proxy-address:port" ...</p>
+    </div>
+
+    <div id="demo" class="row">
+        <h3 class="text-success">示例</h3>
+        <h4>MySQL</h4>
+        <h5>搜索MySQL镜像</h5>
+        <p>docker search mysql</p>
+        <h5>拉取</h5>
+        <p>docker pull mysql 也可指定具体tag，不指定默认拉取latest</p>
+        <h5 class="text-success">启动容器</h5>
+        <p contenteditable="true">docker run --name mysql_3306 -v /home/mysql8/data:/var/lib/mysql  --network mynet
+            -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:8.0.3</p>
+        <h5>本地连接测试</h5>
+        <p>docker exec -it mysql_3306 bash</p>
+        <p>mysql -u root -p</p>
+        <img src="img/mysql-local.png" alt="" class="img-thumbnail">
+        <h5>授予远程权限</h5>
+        <p>use mysql;</p>
+        <p>alter user 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'admin_sql';</p>
+        <p>flush privileges;</p>
+        <p>select host,user,plugin from user;</p>
+        <img src="img/mysql-user.png" alt="" class="img-thumbnail">
+        <h5>远程登陆</h5>
+        <img src="img/mysql-remote.png" alt="" class="img-thumbnail">
+        <h5>优化配置</h5>
+        <p>从容器复制出配置文件</p>
+        <p contenteditable="true">docker cp mysql_3306:/etc/mysql/my.cnf  ./my.cnf</p>
+        <h5>修改配置</h5>
+        <pre><code lang="ini">
+        symbolic-links=0
+        character_set_server=utf8
+        default-time-zone = '+08:00'
+        log-bin-trust-function-creators = 1
+        innodb_buffer_pool_size=2147483648
+
+        [mysql]
+        default-character-set = utf8
+
+        [mysql.server]
+        default-character-set = utf8
+
+        [mysqld_safe]
+        default-character-set = utf8
+
+        [client]
+        default-character-set = utf8
+        </code></pre>
+        <p>修改后的配置复制进容器并重启</p>
+        <p>docker cp ./my.cnf mysql_3306:/etc/mysql/my.cnf</p>
+        <p>docker restart mysql_3306</p>
+        <h5>定时备份</h5>
+        <p>使用mysqldump备份指定的数据库，并通过java压缩上传OSS进行安全备份</p>
+        <p>vi bakcup.sh</p>
+        <pre><code lang="bash">
+        #!/bin/bash
+
+        dd=`date +%Y%m%d_%H%M%S`
+
+        /usr/bin/docker exec mysql8 mysqldump -uroot -p密码 指定的数据库 > /www/mysql8/bak/$dd.sql
+
+        /usr/bin/docker run --name upbakmysql -v /www/jars:/root -v /www/mysql8/bak:/bak -w /root -d --rm --privileged=true openjdk:8 java -Djava.security.egd=file:/dev/./urandom -jar /root/upqiniu.jar mysql $dd
+
+        echo mysql bakcup task start $dd over `date +%Y%m%d_%H%M%S`
+        </code></pre>
+        <p>chmod a+x bakcup.sh</p>
+        <p>vi /etc/crontab</p>
+        <p>在liunx系统定时任务文件追加如下内容：</p>
+        <p>5 18 * * * root /www/mysql8/bakcup.sh</p>
+        <p>即：在每天的18：05时，以root身份执行定时备份的脚本</p>
+
+        <h4 id="demoNginx">Nginx</h4>
+        <p>先运行容器获取默认的配置文件</p>
+        <p>docker run --name nginx -p 8080:80 -d nginx:1.25.1</p>
+        <p>docker cp nginx:/usr/share/nginx/html/index.html ./html/</p>
+        <p>docker cp nginx:/usr/share/nginx/html/50x.html ./html/</p>
+        <p>docker cp nginx:/etc/nginx/nginx.conf ./</p>
+        <p>修改配置文件</p>
+        <pre><code lang="nginx">
+        user  nginx;
+        worker_processes  auto;
+
+        error_log  /var/log/nginx/error.log notice;
+        pid        /var/run/nginx.pid;
+
+
+        events {
+            worker_connections  1024;
+        }
+
+
+        http {
+            include       /etc/nginx/mime.types;
+            default_type  application/octet-stream;
+
+            log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                              '$status $body_bytes_sent "$http_referer" '
+                              '"$http_user_agent" "$http_x_forwarded_for"';
+
+            access_log  /var/log/nginx/access.log  main;
+
+            sendfile        on;
+            #tcp_nopush     on;
+
+            keepalive_timeout  65;
+            client_max_body_size 128m;
+            #gzip  on;
+            # 这一段替换原有的include配置
+            server {
+                listen       80;
+                server_name  localhost;
+
+                #access_log  /var/log/nginx/host.access.log  main;
+
+                location / {
+                    root   /html;
+                    index  index.html index.htm;
+                }
+
+                error_page   500 502 503 504  /50x.html;
+                    location = /50x.html {
+                    root   /html;
+                }
+
+            }
+
+        }
+        </code></pre>
+        <p contenteditable="true">docker run --name nginx-8001 -v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf -v /root/docker/nginx/html:/html -p 8001:80 -d nginx:1.25.1</p>
+
+        <h4 id="demoRedis">Redis</h4>
+        <p>Redis默认是无配置文件的，需要准备redis.conf</p>
+        <pre><code>
+        databases 10
+
+        save 900 1
+        save 300 10
+        save 60 10000
+
+        rdbcompression yes
+
+        rdbchecksum yes
+
+        # The filename where to dump the DB
+        dbfilename dump.rdb
+
+        # The working directory.
+        #
+        # The DB will be written inside this directory, with the filename specified
+        # above using the 'dbfilename' configuration directive.
+        #
+        # The Append Only File will also be created inside this directory.
+        #
+        # Note that you must specify a directory here, not a file name.
+        dir ./
+
+        # maxmemory bytes
+
+        appendonly no
+
+        notify-keyspace-events Ex
+
+        daemonize no
+        </code></pre>
+        <h5 class="text-success">启动容器</h5>
+        <p contenteditable="true">docker run -p 6379:6379 --name redis_6379 -v /root/docker/redis/redis.conf:/etc/redis/redis.conf -v /root/docker/redis/data:/data -d redis:5.0.14 redis-server /etc/redis/redis.conf</p>
+
+        <h4 id="demoMongoDB">MongoDB</h4>
+        <h5 class="text-success">启动容器</h5>
+        <p contenteditable="true">docker run --name mongo_27017 -p 27017:27017 -v /root/docker/mongo/data:/data/db -d mongo:3.6</p>
+        <img src="img/mongo-remote.png" alt="">
+        <h5 class="text-warning">启动认证容器</h5>
+        <p>docker run --name mongo_27017 -p 27017:27017 -v /root/docker/mongo/data:/data/db -d mongo:3.6 <span class="text-danger">--auth</span></p>
+        <p>docker exec -it mongo_27017 mongo admin</p>
+        <pre><code lang="javascript">
+        // 切换admin库
+        use admin
+        // 创建用户并赋予root权限
+        db.createUser({user:"root",pwd:"123456",roles:[{ role: "root", db: "admin" }]})
+        db.auth("root", "123456")
+        </code></pre>
+
+        <h4 id="demoOracle11g">Oracle11g</h4>
+        <p class="text-warning">由于Oracle数据库为非免费数据库，无官服免费的镜像可用</p>
+        <h5 class="text-success">启动容器 Oracle11g helowin</h5>
+        <p contenteditable="true">docker run -d -p 1521:1521 --name oracle11g -v /root/docker/oracle/data:/home/oracle/app/oracle/oradata/helowin registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g</p>
+        <p>docker exec -it oracle11g bash</p>
+        <p>su - root 密码<span class="text-danger">helowin</span></p>
+        <p>vi /etc/profile 追加如下配置</p>
+        <pre><code lang="ini">
+        export ORACLE_HOME=/home/oracle/app/oracle/product/11.2.0/dbhome_2
+        export ORACLE_SID=helowin
+        export PATH=$ORACLE_HOME/bin:$PATH
+        </code></pre>
+        <p>保存退出后，执行 source /etc/profile 使环境变量生效</p>
+        <p>su - oracle</p>
+        <p>本地登录 <span class="text-danger">sqlplus / as sysdba</span> 重置 <span class="text-danger">sys system</span>密码</p>
+
+        <h5 class="text-success">启动容器 jaspeen/oracle-11g</h5>
+        <p>这个镜像没有直接安装好oracle，只是配置好了环境，并提供了安装脚本，需要按照要求把oracle的安装目录配置好，启动镜像，即可安装，安装完成后可以删除安装包（保留映射目录）</p>
+        <p>从Oracle官网下载Linux版64位安装包并上传、解压至/root/docker/oracle/database</p>
+        <p>chmod -R 777 /root/docker/oracle/database</p>
+        <p contenteditable="true">docker run --privileged --name oracle11g_1521 -p 1521:1521 -v /root/docker/oracle/database:/install/database jaspeen/oracle-11g</p>
+        <p>安装会卡住终端，可开启新终端查看容器运行情况；</p>
+        <p>安装成功后可进入容器通过 <span class="text-danger">sqlplus / as sysdba</span>重置 <span class="text-danger">sys system</span>密码</p>
+        <pre><code lang="sql">
+        ALTER user sys identified by '';
+        ALTER user system identified by '';
+        -- 设置密码不过期
+        alter profile default limit password_life_time unlimited;
+        </code></pre>
+
+        <h4 id="demoNeo4j35">neo4j 3.5</h4>
+        <h5 class="text-success">启动容器</h5>
+        <p>docker run -d --name neo4j-35 -p 7474:7474 -p 7687:7687 -v /root/docker/neo4j/data:/data -v /root/docker/neo4j/logs:/logs -v /d/docker/neo4j/conf:/var/lib/neo4j/conf -v /root/docker/neo4j/import:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/admin1 neo4j:3.5.28-community</p>
+        <p>默认的密码不能是<span class="text-danger">neo4j</span>，否则服务无法正常启动</p>
+        <p>7474是web功能端口 7687为数据访问端口</p>
+
+        <h4 id="demoFTPD">FTPD</h4>
+        <h5 class="text-success">启动容器</h5>
+        <p>docker run -d -p 2021:21 -p 2020:20 -p 21100-21110:21100-21110 \</p>
+        <p>-v /root/docker/ftp:/home/vsftpd/ftp \</p>
+        <p>-e FTP_USER=ftp \</p>
+        <p>-e FTP_PASS=123123 \</p>
+        <p>-e PASV_ADDRESS=192.168.10.221 \</p>
+        <p>-e PASV_MIN_PORT=21100 \</p>
+        <p>-e PASV_MAX_PORT=21110 \</p>
+        <p>--name vsftpd fauria/vsftpd</p>
+        <p>FTP_USER 指定 <span class="text-danger">用户名</span>，要与挂载路径下的/home/vsftpd/<span class="text-danger">用户名</span> 保持一致</p>
+        <p>FTP_PASS 指定用户密码</p>
+        <p>PASV_ADDRESS 宿主机真实IP</p>
+
+        <h4 id="demoES">ES</h4>
+        <h5 class="text-success">启动容器</h5>
+        <p contenteditable="true">docker run -d --privileged=true -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms1024m -Xmx1024m"  --name elasticsearch elasticsearch:7.14.0</p>
+        <p>discovery.type=single-node 单机模式</p>
+        <p>进入容器修改config/elasticsearch.yml，增加如下配置以开启跨域</p>
+        <pre><code lang="yaml">
+        http.cors.enabled: true
+        http.cors.allow-origin: "*"
+        </code></pre>
+        <p>退出容器并重启， 等待片刻在浏览器访问 http://ip:9200/ 看到如下内容</p>
+        <pre><code lang="json">
+        {
+          "name" : "aa3ed90e4a82",
+          "cluster_name" : "docker-cluster",
+          "cluster_uuid" : "DbYLu5ohSgaEvd5KLPzYFQ",
+          "version" : {
+            "number" : "7.14.0",
+            "build_flavor" : "default",
+            "build_type" : "docker",
+            "build_hash" : "dd5a0a2acaa2045ff9624f3729fc8a6f40835aa1",
+            "build_date" : "2021-07-29T20:49:32.864135063Z",
+            "build_snapshot" : false,
+            "lucene_version" : "8.9.0",
+            "minimum_wire_compatibility_version" : "6.8.0",
+            "minimum_index_compatibility_version" : "6.0.0-beta1"
+          },
+          "tagline" : "You Know, for Search"
+        }
+        </code></pre>
+
+        <h4 id="demoNEXUS">NEXUS</h4>
+        <h5 class="text-success">启动容器</h5>
+        <p contenteditable="true">docker run -d -p 8081:8081 --name nexus-8081 sonatype/nexus3:3.42.0</p>
+        <p>查看初始密码 <span class="text-danger">需要等一会</span></p>
+        <p>docker exec nexus-8081 cat /nexus-data/admin.password</p>
+        <p>此容器需要等待内置数据库完全停止</p>
+        <p>docker stop --time=120 nexus-8081</p>
+
+        <h4 id="demoMaven">Maven打包</h4>
+        <h5 class="text-success">运行一次性容器</h5>
+        <p>docker run -it --rm --privileged=true \</p>
+        <p>-v /root/docker/maven/boot-demo-2.2.2:/project \</p>
+        <p>-v /root/docker/maven/repo:/root/.m2/repository \</p>
+        <p>-w /project --name maven maven:3.6.3-jdk-8 mvn clean package</p>
+        <p>--rm 容器运行完成后立即删除</p>
+        <p>-v /root/docker/maven/repo:/root/.m2/repository 挂载maven仓库以便复用</p>
+        <p>-w /project 指定工作目录为项目挂载的目录</p>
+        <p>打包完成后可进入宿主机项目路径/target查看成果</p>
+    </div>
+
+    <div id="build" class="row">
+        <h3 class="text-primary">构建</h3>
+        <h4>构建SpringBoot镜像并运行</h4>
+        <p>打包springboot工程的可执行的boot.jar，编写Dockerfile文件：</p>
+        <pre><code lang="docker">
+        FROM java:8
+
+        MAINTAINER peiwt
+
+        VOLUME /tmp
+
+        RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+        RUN mkdir -p /root/jars
+
+        WORKDIR /root/jars
+
+        EXPOSE 8080
+
+        ADD ./boot.jar ./app.jar
+
+        CMD sleep 30;java -Xms128m -Xmx512m -Djava.security.egd=file:/dev/./urandom -jar app.jar
+        </code></pre>
+        <h5 class="text-primary">制作镜像</h5>
+        <p>docker build -t boot:1.0</p>
+        <h5 class="text-success">启动容器</h5>
+        <p>docker run -d -p 8080:8080 --name boot-8080 boot:1.0</p>
+        <h4 id="buildSentinel">构建sentinel并运行</h4>
+        <p>准备sentinel-1.8.0.jar并将其web端口改为9090，编写Dockerfile文件：</p>
+        <pre><code lang="docker">
+        FROM java:8
+
+        MAINTAINER peiwt
+
+        VOLUME /tmp
+
+        RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+        RUN mkdir -p /root/jars
+
+        WORKDIR /root/jars
+
+        EXPOSE 9090
+
+        ADD ./sentinel-1.8.0.jar ./app.jar
+
+        CMD sleep 30;java -Xms128m -Xmx512m -Djava.security.egd=file:/dev/./urandom -jar app.jar
+        </code></pre>
+        <h5 class="text-primary">制作镜像</h5>
+        <p>docker build -t sentinel:1.8.0 .</p>
+        <h5 class="text-success">启动容器</h5>
+        <p>docker run -d -p 9090:9090 --name sentinel-9090 sentinel:1.8.0</p>
+    </div>
+</div>
+
+<script>
+    hljs.highlightAll();
+
+(function (dom, echarts) {
+    let chart = echarts.init(dom);
+    const option = {
+        title: { text: '' },
+        tooltip: {
+            formatter: function (x) {
+                let msg = x.data.explain;
+                return !msg?'':msg.replace(/\n/g,'<br>');
+            }
+        },
+        series: [
+            {
+                type: 'graph',
+                layout: 'force',
+                //symbol: 'none',
+                // 节点大小
+                symbolSize: 80,
+                roam: true,
+                edgeSymbol: ['circle', 'arrow'],
+                edgeSymbolSize: [4, 10],
+                edgeLabel: {
+                    normal: {
+                        textStyle: {
+                            fontSize: 20
+                        }
+                    }
+                },
+                force: {
+                    repulsion: 900,
+                    edgeLength: [10, 400]
+                },
+                draggable: true,
+                itemStyle: {
+                    normal: {
+                        color: '#4b565b'
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        width: 2,
+                        color: 'source',
+                    }
+                },
+                edgeLabel: {
+                    normal: {
+                        show: true,
+                        formatter: function (x) {
+                            return x.data.name;
+                        }
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: function (x) {
+                            return x.data.name;
+                        },
+                        textStyle: {
+                        }
+                    }
+                },
+                data: [
+                    {
+                        name: '中央仓库',
+                        explain: '存储镜像的公共服务器',
+                        itemStyle: {
+                            normal: {
+                                color: '#f0ad4e'
+                            }
+                        }
+                    },{
+                        name: '本地镜像',
+                        explain: '本地可用镜像，由中央仓库拉取或本地构建',
+                        itemStyle: {
+                            normal: {
+                                color: '#5cb85c'
+                            }
+                        }
+                    },{
+                        name: '运行中容器',
+                        explain: '由镜像运行得到的实例',
+                        itemStyle: {
+                            normal: {
+                                color: '#337ab7'
+                            }
+                        }
+                    },{
+                        name: '停止的容器',
+                        explain: '停止运行的容器',
+                        itemStyle: {
+                            normal: {
+                                color: '#2da2b7'
+                            }
+                        }
+                    },{
+                        name: 'Dockerfile',
+                        explain: '镜像制作脚本',
+                        itemStyle: {
+                            normal: {
+                                color: '#a3b880'
+                            }
+                        }
+                    },{
+                        name: '删除',
+                        explain: '',
+                        itemStyle: {
+                            normal: {
+                                color: '#b84f23'
+                            }
+                        }
+                    },{
+                        name: '文件名.tar',
+                        explain: '',
+                        itemStyle: {
+                            normal: {
+                                color: '#b8336b'
+                            }
+                        }
+                    }
+                ],
+                links: [
+                    {
+                        source: '中央仓库',
+                        target: '本地镜像',
+                        name: 'pull'
+                    },{
+                        source: 'Dockerfile',
+                        target: '本地镜像',
+                        name: 'build'
+                    },{
+                        source: '本地镜像',
+                        target: '运行中容器',
+                        name: 'run',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },{
+                        source: '运行中容器',
+                        target: '本地镜像',
+                        name: 'commit -p',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },{
+                        source: '停止的容器',
+                        target: '本地镜像',
+                        name: 'commit'
+                    },{
+                        source: '停止的容器',
+                        target: '运行中容器',
+                        name: 'start',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },{
+                        source: '运行中容器',
+                        target: '停止的容器',
+                        name: 'stop',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },{
+                        source: '停止的容器',
+                        target: '删除',
+                        name: 'rm'
+                    },{
+                        source: '运行中容器',
+                        target: '删除',
+                        name: 'rm -f'
+                    },{
+                        source: '本地镜像',
+                        target: '删除',
+                        name: 'rmi'
+                    },{
+                        source: '本地镜像',
+                        target: '文件名.tar',
+                        name: 'save -o',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },{
+                        source: '文件名.tar',
+                        target: '本地镜像',
+                        name: 'load -i',
+                        lineStyle: {
+                            curveness: 0.2
+                        }
+                    },
+                ]
+            }
+        ]
+    };
+    chart.setOption(option);
+})(document.getElementById('commandChart'), echarts)
+</script>
+</body>
+</html>
