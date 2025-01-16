@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Baidu TTS</title>
+    <link href="../plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
+  </head>
+  <body>
+  	<div class="container">
+  		<h1 class="page-header">百度朗读</h1>
+  		<h3> </h3>
+      <div class="row">
+        
+        <div class="col-md-12" style="margin-top: 10px;">
+          <form id="form" class="form-inline">
+            <div class="form-group">
+              <label for="spd">语速</label>
+              <select name="spd" id="spd" class="form-control">
+                <option value="1">慢</option>
+                <option value="5" selected>中等</option>
+                <option value="7">稍快</option>
+                <option value="10">快</option>
+                <option value="15">极快</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pit">音调</label>
+              <select name="pit" id="pit" class="form-control">
+                <option value="1">低</option>
+                <option value="5" selected>中等</option>
+                <option value="10">高</option>
+                <option value="15">极高</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="vol">音量</label>
+              <select name="vol" id="vol" class="form-control">
+                <option value="1">低</option>
+                <option value="5" selected>中等</option>
+                <option value="10">高</option>
+                <option value="15">极高</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="per">人声</label>
+              <select name="per" id="per" class="form-control">
+                <option value="0">普通女</option>
+                <option value="1">普通男</option>
+                <option value="3">度逍遥</option>
+                <option value="4">度丫丫</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="storyurl">地址</label>
+              <input type="text" class="form-control" id="storyurl" placeholder=".txt">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="getStory()">读取文件</button>
+            <button type="button" class="btn btn-success" onclick="read(this)" id='read-btn'>朗读</button>
+            <button type="button" class="btn btn-success" onclick="pause(this)">暂停</button>
+            <button type="button" class="btn btn-success" onclick="next2()">下一段</button>
+            <button type="button" class="btn btn-danger" onclick="clear2()">清除段落</button>
+          </form>
+        </div>
+        <div class="hide">
+          <audio id="audio" src=""></audio>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <div class="col-md-12">
+          <div class="progress">
+            <div id="progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="contents">
+      </div>
+  	</div>
+    <script src="../plugin/jquery/jquery.1.11.3.min.js"></script>
+    <script src="../plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="txt.js"></script>
+  </body>
+</html>

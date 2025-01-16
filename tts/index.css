@@ -1,0 +1,12 @@
+#contents{
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#contents .col-md-12{
+    word-break:break-all;
+    margin-top: 4px;
+    text-indent:2em;
+}
+
