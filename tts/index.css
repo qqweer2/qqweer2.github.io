@@ -1,5 +1,5 @@
 #contents{
-    max-height: 400px;
+    max-height: calc(100vh - 230px);
     overflow-y: auto;
     margin-top: 10px;
 }
